@@ -38,13 +38,13 @@ function sendCoin() {
 
 // objectApp javascript code
 
-function refreshStatus() {
+function refreshStatus(objAddress) {
   var rentable = RentableObjects.deployed();
 
   var addressElement = document.getElementById("address");
-  addressElement.innerHTML = account;
+  addressElement.innerHTML = objAddress;
 
-  rentable.objectIsRegistered.call(account, {from: account}).then(function(value) {
+  rentable.objectIsRegistered.call(objAddress, {from: account}).then(function(value) {
     var registeredElement = document.getElementById("registered");
     var registerPage = document.getElementById("registerPage");
     var unregisterPage = document.getElementById("unregisterPage");
@@ -64,7 +64,7 @@ function refreshStatus() {
       setStatus("Error getting objectRegistered()");
     });
 
-  rentable.objectIsRented.call(account, {from: account}).then(function(value) {
+  rentable.objectIsRented.call(objAddress, {from: account}).then(function(value) {
     var registeredElement = document.getElementById("rented");
     if (value)
       registeredElement.innerHTML = "";
@@ -72,10 +72,37 @@ function refreshStatus() {
       registeredElement.innerHTML = "not ";
     }).catch(function(e) {
       console.log(e);
-      setStatus("Error getting objectRegistered()");
+      setStatus("Error getting objectRented()");
+    });
+};
+
+function refreshDetails(objAddress) {
+  var rentable = RentableObjects.deployed();
+
+  rentable.getObjectPrice.call(objAddress, {from: account}).then(function(value) {
+    var priceElement = document.getElementById("price");
+    priceElement.innerHTML = parseInt(value);
+    }).catch(function(e) {
+      console.log(e);
+      setStatus("Error executing getObjectPrice()");
     });
 
-};
+  rentable.getObjectDescription.call(objAddress, {from: account}).then(function(value) {
+    var descriptionElement = document.getElementById("description");
+    descriptionElement.innerHTML = value;
+    }).catch(function(e) {
+      console.log(e);
+      setStatus("Error executing getObjectDescription()");
+    });
+
+  rentable.getObjectClientContactInfo.call(objAddress, {from: account}).then(function(value) {
+    var contactInfoElement = document.getElementById("contactInfo");
+    contactInfoElement.innerHTML = value;
+    }).catch(function(e) {
+      console.log(e);
+      setStatus("Error executing getObjectClientContactInfo()");
+    });
+}
 
 function registerObject() {
   var rentable = RentableObjects.deployed();
@@ -89,11 +116,11 @@ function registerObject() {
   rentable.addObject(price, description, {from: account}).then(function(success) {
     if (success) {
       setStatus("New object registered successfully.");
-      refreshStatus();
+      refreshStatus(account);
     }
     else {
       setStatus("Object registering not possible. Please try again.");
-      refreshStatus();
+      refreshStatus(account);
     }
   }).catch(function(e) {
     console.log(e);
@@ -109,14 +136,32 @@ function unregisterObject() {
   rentable.removeObject({from: account}).then(function(success) {
     if (success) {
       setStatus("Object removed successfully.");
-      refreshStatus();
+      refreshStatus(account);
     }
     else {
       setStatus("Unregistering object not possible. Please try again.");
-      refreshStatus();
+      refreshStatus(account);
     }
   }).catch(function(e) {
     console.log(e);
     setStatus("Error unregistering object; see log.");
   });
 };
+
+function rentObject(objAddress) {
+  var rentable = RentableObjects.deployed();
+
+  setStatus("Renting object... (please wait)");
+
+  rentable.rentObject(objAddress, {from: account}).then(function(success) {
+    if (success) {
+      setStatus("Object successfully rented.");
+    }
+    else {
+      setStatus("Renting object not possible. Please try again.");
+    }
+  }).catch(function(e) {
+    console.log(e);
+    setStatus("Error renting object; see log.");
+  });
+}

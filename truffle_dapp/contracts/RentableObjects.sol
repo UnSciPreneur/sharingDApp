@@ -61,7 +61,7 @@ contract RentableObjects {
     }
   }
 
-  function currentObjectPrice(address _objAddress) returns(uint) {
+  function getObjectPrice(address _objAddress) returns(uint) {
     /* example for linear degression of price
       |------
       |      --|---
@@ -71,12 +71,18 @@ contract RentableObjects {
       calculated by:
       objPrice = price * ( 1 - ( (now - created) / amortizationPeriod ) )
     */
-    uint _price = objects[_objAddress].price * ( 1 - ( (now - objects[_objAddress].created) / objects[_objAddress].amortizationPeriod ) );
-    return _price;
+    uint subtrahend = ( (1000 * (now - objects[_objAddress].created)) / objects[_objAddress].amortizationPeriod );
+    if (subtrahend > 1000) {
+      return 0;
+    }
+    else {
+      uint _price = ( objects[_objAddress].price * (1000 - subtrahend) ) / 1000;
+      return _price;
+    }
   }
 
   function rentObject(address _objAddress, string _contactInfo) returns (bool) {
-    if ( (objectIsRented(_objAddress) == false) && (msg.value >= currentObjectPrice(_objAddress)) ) {
+    if ( (objectIsRented(_objAddress) == false) && (msg.value >= getObjectPrice(_objAddress)) ) {
       // add client to object
       objects[_objAddress].client = Client({cliAddress: msg.sender, contactInfo: _contactInfo, exists: true});
       // send back any excess ether
@@ -97,6 +103,10 @@ contract RentableObjects {
 
   function getObjectClientContactInfo(address _objAddress) returns (string) {
     return objects[_objAddress].client.contactInfo;
+  }
+
+  function getObjectDescription(address _objAddress) returns (string) {
+    return objects[_objAddress].description;
   }
 
   function getObjectClientExists(address _objAddress) returns (bool) {

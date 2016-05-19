@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Bosch Rentable Bohrmaschine</title>
+  <title>Bosch Rentable Objects</title>
   <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
   <link href="./app.css" rel='stylesheet' type='text/css'>
   <script src="./app.js"></script>
@@ -21,31 +21,33 @@
         accounts = accs;
         account = accounts[0];
 
-        refreshStatus(account);
+        refreshBalance();
       });
     }
   </script>
 </head>
 <body>
   <h1>Rentable Objects</h1>
-  <h2>Register or unregister your object here.</h2>
+  <h2>Select an object to rent</h2>
+  <h3>You have <span class="black"><span id="balance"></span> Ether</span></h3>
   <br>
+
+  <h1>Rent out object</h1>
+  <br><label for="objAddress">Object Address:</label><input type="text" id="objAddress" placeholder="0x93e66d9baea28c17d9fc393b53e3fbdd76899dae" onchange="refreshStatus(this.value);refreshDetails(this.value);"></input>
   <div id="objStatus">
-    <h3>Your address is <span class="black"><span id="address"></span></span></h3>
+    <h3>Object address is <span class="black"><span id="address"></span></span></h3>
     <h3>This device is <span class="black"><span id="registered"></span></span>registered.</h3>
     <h3>This device is <span class="black"><span id="rented"></span></span>rented.</h3>
   </div>
-  <div id="registerPage" style="display:none;">
-    <h1>Register this device:</h1>
-    <br><label for="price">Price:</label><input type="number" id="price" placeholder="e.g., 95"></input>
-    <br><label for="amortizationPeriod">Amortization period:</label><input type="number" id="amortizationPeriod" placeholder="4 weeks"></input>
-    <br><label for="description">Object description:</label><input type="text" id="description" placeholder="Bosch Bohrmaschine..."></input>
-    <br><br><button id="register" onclick="registerObject()">Register Object</button>
+
+  <div id="objDetails">
+    <h3>Price <span class="black"><span id="price"></span> Ether</span></h3>
+    <h3><span class="black"><span id="description"></span></span></h3>
+    <h3>Contact info: <span class="black"><span id="contactInfo"></span></span></h3>
   </div>
-  <div id="unregisterPage" style="display:none;">
-    <h1>Unregister this device:</h1>
-    <br><br><button id="register" onclick="unregisterObject()">Unregister Object</button>
-  </div>
+
+  <br><label for="_contactInfo">Your contact info:</label><input type="text" id="_contactInfo" placeholder="Telephone number, address etc. ..."></input>
+  <br><br><button id="rentObject" onclick="rentObject()">Rent Object</button>
   <br><br>
   <span id="status"></span>
 </body>
