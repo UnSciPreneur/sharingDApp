@@ -1,10 +1,30 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>MetaCoin - Default Truffle App</title>
+  <title>Bosch Rentable Bohrmaschine</title>
   <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
-  <link href="./stylesheets/app.css" rel='stylesheet' type='text/css'>
-  <script src="./javascripts/app.js"></script>
+  <link href="./app.css" rel='stylesheet' type='text/css'>
+  <script src="./app.js"></script>
+  <script>
+    window.onload = function() {
+      web3.eth.getAccounts(function(err, accs) {
+        if (err != null) {
+          alert("There was an error fetching your accounts.");
+          return;
+        }
+
+        if (accs.length == 0) {
+          alert("Couldn't get any accounts! Make sure your Ethereum client is configured correctly.");
+          return;
+        }
+
+        accounts = accs;
+        account = accounts[0];
+
+        refreshBalance();
+      });
+    }
+  </script>
 </head>
 <body>
   <h1>MetaCoin</h1>
