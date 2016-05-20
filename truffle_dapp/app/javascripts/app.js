@@ -92,6 +92,8 @@ function refreshStatus(objId) {
 
 function refreshDetails(objId) {
   var rentable = RentableObjects.deployed();
+  // Contract abstraction layer for net-deployed contract:
+  // var rentable = RentableObject.at(0x....);
 
   // setStatus("Refreshing object details... (please wait)");
 
@@ -165,7 +167,6 @@ function unregisterObject(objId) {
 
 function rentObject(objId) {
   var rentable = RentableObjects.deployed();
-
 
   setStatus("Renting object... (please wait)");
   var contactInfo = document.getElementById("_contactInfo").value;
