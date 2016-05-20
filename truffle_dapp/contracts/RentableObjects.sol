@@ -50,8 +50,7 @@ contract RentableObjects {
   }
 
   function removeObject() returns (bool) {
-    // TODO: check for rented status
-    if (objects[msg.sender].exists == true) {
+    if ( (objects[msg.sender].exists == true) && (objectIsRented(msg.sender) == false) ) {
       delete objects[msg.sender];
       return true;
     }
@@ -62,6 +61,7 @@ contract RentableObjects {
   }
 
   function getObjectPrice(address _objAddress) returns(uint) {
+    // TODO: SOMETHING WRONG WITH CALCULATION!
     /* example for linear degression of price
       |------
       |      --|---
@@ -95,6 +95,10 @@ contract RentableObjects {
       return false;
       throw;
     }
+  }
+
+  function getObjectBalance(address _objAddress) returns (uint) {
+    return _objAddress.balance;
   }
 
   function getObjectClientAddress(address _objAddress) returns (address) {

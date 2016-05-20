@@ -12,9 +12,7 @@ module.exports = {
     "images/": "images/"
   },
   deploy: [
-    "RentableObjects",
-    "MetaCoin",
-    "ConvertLib"
+    "RentableObjects"
   ],
   rpc: {
     host: "localhost",
