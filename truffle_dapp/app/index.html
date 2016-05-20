@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Bosch Rentable Bohrmaschine</title>
+  <title>Bosch Rentable Objects</title>
   <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
   <link href="./app.css" rel='stylesheet' type='text/css'>
   <script src="./app.js"></script>
@@ -21,23 +21,32 @@
         accounts = accs;
         account = accounts[0];
 
-        refreshBalance();
+        refreshBalance(account);
       });
     }
   </script>
 </head>
 <body>
   <button id="toggleAccounts" onclick="toggleAccounts()">Toggle Accounts</button>
-  <br>
-  <h1>MetaCoin</h1>
-  <h2>Example Truffle Dapp</h2>
-  <h3>You have <span class="black"><span id="balance"></span> META</span></h3>
+  <h4><span class="black"><span id="address"></span></span></h4>
+  <h2>Select an object to rent</h2>
+  <h1>Rent out object</h1>
+  <br><label for="_objId">Object Id:</label><input type="text" id="_objId" placeholder="0x93e66d9" onchange="refreshStatus(this.value);refreshDetails(this.value);"></input>
+  <div id="objStatus">
+    <h3>Object ID is: <span class="black"><span id="objId"></span></span></h3>
+    <h3>This device is <span class="black"><span id="registered"></span></span>registered.</h3>
+    <h3>This device is <span class="black"><span id="rented"></span></span>rented.</h3>
+  </div>
 
-  <br>
-  <h1>Send</h1>
-  <br><label for="amount">Amount:</label><input type="text" id="amount" placeholder="e.g., 95"></input>
-  <br><label for="receiver">To Address:</label><input type="text" id="receiver" placeholder="e.g., 0x93e66d9baea28c17d9fc393b53e3fbdd76899dae"></input>
-  <br><br><button id="send" onclick="sendCoin()">Send MetaCoin</button>
+  <div id="objDetails">
+    <h3>Price: <span class="black"><span id="price"></span> Ether</span></h3>
+    <h3><span class="black"><span id="description"></span></span></h3>
+    <h3>Contact info: <span class="black"><span id="contactInfo"></span></span></h3>
+  </div>
+  <h3>You have <span class="black"><span id="balance"></span> Ether</span></h3>
+
+  <br><label for="_contactInfo">Your contact info:</label><input type="text" id="_contactInfo" placeholder="Telephone number, address etc. ..."></input>
+  <br><br><button id="rentObject" onclick="rentObject(_objId.value)">Rent Object</button>
   <br><br>
   <span id="status"></span>
 </body>

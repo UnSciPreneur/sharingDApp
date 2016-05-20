@@ -2,7 +2,6 @@ module.exports = {
   build: {
     "index.html": "index.html",
     "objectIndex.html": "objectIndex.html",
-    "rentIndex.html": "rentIndex.html",
     "app.js": [
       "javascripts/app.js"
     ],

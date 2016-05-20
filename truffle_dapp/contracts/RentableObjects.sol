@@ -10,7 +10,7 @@ contract RentableObjects {
   struct Object {
     uint price;
     string description;
-    address objAddress;
+    uint objId;
     Client client;
     uint created;
     uint amortizationPeriod;
@@ -18,21 +18,21 @@ contract RentableObjects {
   }
 
   // Public index to reference objects
-  mapping (address => Object) objects;
+  mapping (uint => Object) objects;
 
   // Constructor
   function RentableObjects() {
 
   }
 
-  function objectIsRegistered(address _objAddress) returns (bool) {
-    return objects[_objAddress].exists;
+  function objectIsRegistered(uint _objId) returns (bool) {
+    return objects[_objId].exists;
   }
 
-  function addObject(uint _price, string _descr) returns (bool) {
-    if (objectIsRegistered(msg.sender) == false) {
+  function addObject(uint _objId, uint _price, string _descr) returns (bool) {
+    if (objectIsRegistered(_objId) == false) {
       Client memory nilClient = Client({cliAddress: 0, contactInfo: "", exists: false});
-      objects[msg.sender] = Object({price: _price, description: _descr, objAddress: msg.sender, client: nilClient, created: now, amortizationPeriod: 4 minutes, exists: true});
+      objects[_objId] = Object({price: _price, description: _descr, objId: _objId, client: nilClient, created: now, amortizationPeriod: 4 days, exists: true});
       return true;
     }
     else {
@@ -40,8 +40,8 @@ contract RentableObjects {
     }
   }
 
-  function objectIsRented(address _objAddress) returns (bool) {
-    if ( (objects[_objAddress].exists == true) && (objects[_objAddress].client.exists == true) ) {
+  function objectIsRented(uint _objId) returns (bool) {
+    if ( (objects[_objId].exists == true) && (objects[_objId].client.exists == true) ) {
       return true;
     }
     else {
@@ -49,9 +49,9 @@ contract RentableObjects {
     }
   }
 
-  function removeObject() returns (bool) {
-    if ( (objects[msg.sender].exists == true) && (objectIsRented(msg.sender) == false) ) {
-      delete objects[msg.sender];
+  function removeObject(uint _objId) returns (bool) {
+    if ( (objects[_objId].exists == true) && (objectIsRented(_objId) == false) ) {
+      delete objects[_objId];
       return true;
     }
     else {
@@ -60,7 +60,7 @@ contract RentableObjects {
     }
   }
 
-  function getObjectPrice(address _objAddress) returns(uint) {
+  function getObjectPrice(uint _objId) returns(uint) {
     // TODO: SOMETHING WRONG WITH CALCULATION!
     /* example for linear degression of price
       |------
@@ -71,50 +71,51 @@ contract RentableObjects {
       calculated by:
       objPrice = price * ( 1 - ( (now - created) / amortizationPeriod ) )
     */
-    uint subtrahend = ( (1000 * (now - objects[_objAddress].created)) / objects[_objAddress].amortizationPeriod );
+    uint subtrahend = ( (1000 * (now - objects[_objId].created)) / objects[_objId].amortizationPeriod );
     if (subtrahend > 1000) {
       return 0;
     }
     else {
-      uint _price = ( objects[_objAddress].price * (1000 - subtrahend) ) / 1000;
+      uint _price = ( objects[_objId].price * (1000 - subtrahend) ) / 1000;
       return _price;
     }
   }
 
-  function rentObject(address _objAddress, string _contactInfo) returns (bool) {
-    if ( (objectIsRented(_objAddress) == false) && (msg.value >= getObjectPrice(_objAddress)) ) {
+  function rentObject(uint _objId, string _contactInfo) returns (bool) {
+    // if ( (objectIsRented(_objId) == false) && (msg.value >= getObjectPrice(_objId)) ) {
+    if (msg.value >= getObjectPrice(_objId)) {
       // add client to object
-      objects[_objAddress].client = Client({cliAddress: msg.sender, contactInfo: _contactInfo, exists: true});
+      objects[_objId].client = Client({cliAddress: msg.sender, contactInfo: _contactInfo, exists: true});
       // send back any excess ether
-      objects[_objAddress].client.cliAddress.send(msg.value - objects[_objAddress].price);
+      objects[_objId].client.cliAddress.send(msg.value - getObjectPrice(_objId));
       // send confirmation to object
-      objects[_objAddress].objAddress.call.value(0)(objects[_objAddress].client.cliAddress);
+      //objects[_objId].objId.call.value(0)(objects[_objId].client.cliAddress);
       return true;
     }
     else {
-      return false;
       throw;
+      return false;
     }
   }
 
-  function getObjectBalance(address _objAddress) returns (uint) {
-    return _objAddress.balance;
+  function getAccountBalance(address _account) returns (uint) {
+    return _account.balance;
   }
 
-  function getObjectClientAddress(address _objAddress) returns (address) {
-    return objects[_objAddress].client.cliAddress;
+  function getObjectClientAddress(uint _objId) returns (address) {
+    return objects[_objId].client.cliAddress;
   }
 
-  function getObjectClientContactInfo(address _objAddress) returns (string) {
-    return objects[_objAddress].client.contactInfo;
+  function getObjectClientContactInfo(uint _objId) returns (string) {
+    return objects[_objId].client.contactInfo;
   }
 
-  function getObjectDescription(address _objAddress) returns (string) {
-    return objects[_objAddress].description;
+  function getObjectDescription(uint _objId) returns (string) {
+    return objects[_objId].description;
   }
 
-  function getObjectClientExists(address _objAddress) returns (bool) {
-    return objects[_objAddress].client.exists;
+  function getObjectClientExists(uint _objId) returns (bool) {
+    return objects[_objId].client.exists;
   }
 
   // Fallback function results in nothing
