@@ -112,6 +112,17 @@ function getObjectClientContactInfo(objId, callBack) {
   });
 }
 
+function getObjectClientAddress(objId, callBack) {
+  var rentable = RentableObjects.deployed();
+
+  rentable.getObjectClientAddress.call(objId, {from: account}).then(function (value) {
+    callBack(value);
+  }).catch(function (e) {
+    console.log(e);
+    setStatus("Error executing getObjectClientAddress()");
+  });
+}
+
 function refreshStatus(objId) {
   //var rentable = RentableObjects.deployed();
 
