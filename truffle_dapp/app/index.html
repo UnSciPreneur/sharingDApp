@@ -22,6 +22,14 @@
         account = accounts[0];
 
         refreshBalance(account);
+
+        var objIdElement = document.getElementById("_objId");
+        var objId = get('objId');
+        if (objId != undefined) {
+          objIdElement.value = objId;
+          refreshStatus(objIdElement.value);
+          refreshDetails(objIdElement.value);
+        }
       });
     }
   </script>
