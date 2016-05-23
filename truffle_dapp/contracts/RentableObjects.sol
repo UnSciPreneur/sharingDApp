@@ -131,6 +131,10 @@ contract RentableObjects {
     return objects[_objId].client.exists;
   }
 
+  function getObjectClientTime(uint _objId) returns (uint) {
+    return now - objects[_objId].client.since;
+  }
+
   // Fallback function results in nothing
   function () {
     throw;
