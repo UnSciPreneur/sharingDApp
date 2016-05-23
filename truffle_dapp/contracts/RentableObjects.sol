@@ -3,6 +3,7 @@ contract RentableObjects {
   struct Client {
     address cliAddress;
     string contactInfo;
+    uint since;
     bool exists;
   }
 
@@ -29,14 +30,14 @@ contract RentableObjects {
     return objects[_objId].exists;
   }
 
-  function addObject(uint _objId, uint _price, string _descr) returns (uint8) {
+  function addObject(uint _objId, uint _price, string _descr) returns (bool) {
     if (objectIsRegistered(_objId) == false) {
-      Client memory nilClient = Client({cliAddress: 0, contactInfo: "", exists: false});
+      Client memory nilClient = Client({cliAddress: 0, contactInfo: "", since: 0, exists: false});
       objects[_objId] = Object({price: _price, description: _descr, objId: _objId, client: nilClient, created: now, amortizationPeriod: 4 days, exists: true});
-      return 0x00;
+      return true;
     }
     else {
-      return 0xFF;
+      return false;
     }
   }
 
@@ -85,12 +86,24 @@ contract RentableObjects {
     // if ( (objectIsRented(_objId) == false) && (msg.value >= getObjectPrice(_objId)) ) {
     if (msg.value >= getObjectPrice(_objId)) {
       // add client to object
-      objects[_objId].client = Client({cliAddress: msg.sender, contactInfo: _contactInfo, exists: true});
+      objects[_objId].client = Client({cliAddress: msg.sender, contactInfo: _contactInfo, since: now, exists: true});
       // send back any excess ether
       objects[_objId].client.cliAddress.send(msg.value - getObjectPrice(_objId));
       // send confirmation to object
       //objects[_objId].objId.call.value(0)(objects[_objId].client.cliAddress);
       return true;
+    }
+    else {
+      throw;
+      return false;
+    }
+  }
+
+  function returnObject(uint _objId) returns (bool) {
+    if ( (objectIsRented(_objId) == true) && (msg.sender == getObjectClientAddress(_objId)) ) {
+      objects[_objId].client = Client({cliAddress: 0, contactInfo: "", since: 0, exists: false});
+      msg.sender.send(getObjectPrice(_objId));
+       return true;
     }
     else {
       throw;
@@ -116,6 +129,10 @@ contract RentableObjects {
 
   function getObjectClientExists(uint _objId) returns (bool) {
     return objects[_objId].client.exists;
+  }
+
+  function getObjectClientTime(uint _objId) returns (uint) {
+    return now - objects[_objId].client.since;
   }
 
   // Fallback function results in nothing

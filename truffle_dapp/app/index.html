@@ -30,110 +30,60 @@
           refreshStatus(objIdElement.value);
           refreshDetails(objIdElement.value);
 
-
-          objectIsRegistered(objId, function(registered) {
-            if (registered) {
-              // object is registered
-              objectIsRented(objId, function(rented) {
-                if (rented) {
-                  // object is rented
-                  getObjectClientAddress(objId, function(clientAddress) {
-                    if (clientAddress == account) {
-                      // account is client -> show rentOverview
-                      document.getElementById("rentOverview").style.display = "inline";
-                    }
-                    else {
-                      // -> show objectInformation
-                      document.getElementById("objectInformation").style.display = "inline";
-                    }
-                  });
-                }
-                else {
-                  // object is unrented -> show rentingPage
-                  document.getElementById("rentingPage").style.display = "inline";
-                }
-              });
-            }
-            else {
-              var rentable = RentableObjects.deployed();
-              // object is unregistered
-              if (account == rentable.creator) {
-                // account is contract owner -> show register screen
-                document.getElementById("registerPage").style.display = "inline";
-              }
-              else {
-                // -> show not found screen
-                document.getElementById("notFoundPage").style.display = "inline";
-              }
-            }
-          });
-
+          switchPageView(objId);
         }
-
-        // Decide which website to display after call
-        // object is registered
-          // object is rented
-            // account is client -> show rental overview
-            // -> show object information
-          // object is unrented -> show rental screen
-        // object is unregistered
-          // account is contract owner -> show register screen
-          // -> show not found screen
-
       });
     }
   </script>
 </head>
 <body>
-  <button id="toggleAccounts" onclick="toggleAccounts()">Toggle Accounts</button>
+  <button id="toggleAccounts" onclick="toggleAccounts();switchPageView(_objId.value);">Toggle Accounts</button>
   <h4><span class="black"><span id="address"></span></span></h4>
   <h2>Select an object to rent</h2>
-  <h1>Rent out object</h1>
-  <br><label for="_objId">Object Id:</label><input type="text" id="_objId" placeholder="0x93e66d9" onchange="refreshStatus(this.value);refreshDetails(this.value);"></input>
-  <div id="objStatus">
-    <h3>Object ID is: <span class="black"><span id="objId"></span></span></h3>
-    <h3>This device is <span class="black"><span id="registered"></span></span>registered.</h3>
-    <h3>This device is <span class="black"><span id="rented"></span></span>rented.</h3>
-  </div>
-
-  <div id="objDetails">
-    <h3>Price: <span class="black"><span id="price"></span> Ether</span></h3>
-    <h3><span class="black"><span id="description"></span></span></h3>
-    <h3>Contact info: <span class="black"><span id="contactInfo"></span></span></h3>
-  </div>
+  <br><label for="_objId">Object Id:</label><input type="text" id="_objId" placeholder="0x93e66d9" onchange="refreshStatus(this.value);refreshDetails(this.value);switchPageView(this.value);"></input>
   <h3>You have <span class="black"><span id="balance"></span> Ether</span></h3>
+  <span id="status"></span><br>
 
-  <br><label for="_contactInfo">Your contact info:</label><input type="text" id="_contactInfo" placeholder="Telephone number, address etc. ..."></input>
-  <br><br><button id="rentObject" onclick="rentObject(_objId.value)">Rent Object</button>
-  <br><br>
-  <span id="status"></span>
 
-  <div id="rentOverview" style="display:none;">
-    Rental Overview<br>
-    Time of ownership: ...
-  </div>
+<!-- Beginning of pages switching in switchPageView -->
+
+<!-- Page with object information -->
   <div id="objectInformation" style="display:none;">
-    Object Information<br>
-    Bohrmaschine,
-    Preis:
-    ...
+    <h4>Object ID is: <span class="black"><span id="objId"></span></span></h4>
+    <h4>This device is <span class="black"><span id="registered"></span></span>registered.</h4>
+    <h4>This device is <span class="black"><span id="rented"></span></span>rented.</h4>
+    <h4>Price: <span class="black"><span id="price"></span> Ether</span></h4>
+    <h4><span class="black"><span id="description"></span></span></h4>
+    <h4>Contact info: <span class="black"><span id="contactInfo"></span></span></h4>
   </div>
+
+<!-- Page to show information for the current renter -->
+  <div id="rentOverview" style="display:none;">
+    <h3>Rental Overview</h3><br>
+    <h4>You have rented this device for <span class="black"><span id="clientTime"></span></span> seconds.</h4>
+    <br><br><button id="rentObject" onclick="returnObject(_objId.value);switchPageView(_objId.value);">Return Object</button>
+  </div>
+
+<!-- Page with renting information -->
   <div id="rentingPage" style="display:none;">
-    Rent Object<br>
-    Bohrmaschine,
-    Preis:
+    <br><label for="_contactInfo">Your contact info:</label><input type="text" id="_contactInfo" placeholder="Telephone number, address etc. ..."></input>
+    <br><br><button id="rentObject" onclick="rentObject(_objId.value);switchPageView(_objId.value);">Rent Object</button>
   </div>
+
+<!-- Page to register a new object -->
   <div id="registerPage" style="display:none;">
-    Register Object<br>
-    Description:
-    Preis:
-    ...
+    <h1>Register this device:</h1>
+    <br><label for="_price">Price:</label><input type="number" id="_price" placeholder="e.g., 95"></input>
+    <br><label for="_amortizationPeriod">Amortization period:</label><input type="number" id="_amortizationPeriod" placeholder="4 weeks"></input>
+    <br><label for="_description">Object description:</label><input type="text" id="_description" placeholder="Bosch Bohrmaschine..."></input>
+    <br><br><button id="register" onclick="registerObject(_objId.value);switchPageView(_objId.value);">Register Object</button>
   </div>
+
+<!-- 404 Object not found page -->
   <div id="notFoundPage" style="display:none;">
     Object not found<br>
     We are sorry to tell that we could not find the object you are looking for...
   </div>
-
 
 </body>
 </html>
