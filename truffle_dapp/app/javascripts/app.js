@@ -40,8 +40,6 @@ function refreshBalance() {
   });
 }
 
-// objectApp javascript code
-
 function viewRegisterPage(state) {
   var registerPage = document.getElementById("registerPage");
   var unregisterPage = document.getElementById("unregisterPage");
@@ -165,8 +163,6 @@ function refreshDetails(objId) {
     priceElement.innerHTML = parseInt(value);
   });
 
-
-
   getObjectDescription(objId, function (value) {
     var descriptionElement = document.getElementById("description");
     descriptionElement.innerHTML = value;
@@ -180,16 +176,15 @@ function refreshDetails(objId) {
 
 function registerObject(objId) {
   var rentable = RentableObjects.deployed();
-
   var price = parseInt(document.getElementById("price").value);
   var amortizationPeriod = parseInt(document.getElementById("amortizationPeriod").value);
   var description = document.getElementById("description").value;
 
   setStatus("Registering object... (please wait)");
 
-  rentable.addObject(objId, price, description, {from: account}).then(function(success) {
-    console.log(success);
-    if (success) {
+  rentable.addObject(objId, price, description, {from: account}).then(function(regSuccess) {
+
+    if (regSuccess) {
       setStatus("New object registered successfully.");
     }
     else {
@@ -223,15 +218,13 @@ function unregisterObject(objId) {
 }
 
 function rentObject(objId) {
-  var rentable = RentableObjects.deployed();
-
   setStatus("Renting object... (please wait)");
-  var contactInfo = document.getElementById("_contactInfo").value;
 
-  rentable.getObjectPrice.call(objId, {from: account}).then(function (value) {
-    var objPrice = parseInt(value);
+  getObjectPrice(objId, function (objPrice) {
+    var rentable = RentableObjects.deployed();
+    var contactInfo = document.getElementById("_contactInfo").value;
 
-    rentable.rentObject(objId, contactInfo, {from: account, value: objPrice}).then(function (success) {
+    rentable.rentObject(objId, contactInfo, {from: account, value: objPrice}).then(function(success) {
       if (success) {
         setStatus("Object successfully rented.");
       }
@@ -242,9 +235,23 @@ function rentObject(objId) {
       console.log(e);
       setStatus("Error renting object; see log.");
     });
+  });
+}
 
+function returnObject(objId) {
+  setStatus("Returning object... (please wait)");
+
+  var rentable = RentableObjects.deployed();
+
+  rentable.returnObject(objId, {from: account}).then(function(success) {
+    if (success) {
+      setStatus("Object successfully returned.");
+    }
+    else {
+      setStatus("Returning object not possible. Please try again.");
+    }
   }).catch(function (e) {
     console.log(e);
-    setStatus("Error executing getObjectPrice()");
+    setStatus("Error returning object; see log.");
   });
 }
