@@ -16,6 +16,3 @@ $ npm install -g ethereumjs-testrpc
 $ testrpc
 $ truffle deploy
 ```
-
-
-bnladskl
