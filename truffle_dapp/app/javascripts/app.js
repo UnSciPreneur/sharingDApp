@@ -57,10 +57,74 @@ function viewRegisterPage(state) {
   }
 }
 
-function refreshStatus(objId) {
+function objectIsRegistered(objId, callBack) {
   var rentable = RentableObjects.deployed();
 
-  // setStatus("Refreshing object status... (please wait)");
+  rentable.objectIsRegistered.call(objId, {from: account}).then(function(value) {
+    callBack(value);
+  }).catch(function (e) {
+    console.log(e);
+    setStatus("Error getting objectIsRegistered()");
+  });
+}
+
+function objectIsRented(objId, callBack) {
+  var rentable = RentableObjects.deployed();
+
+  rentable.objectIsRented.call(objId, {from: account}).then(function(value) {
+    callBack(value);
+  }).catch(function (e) {
+    console.log(e);
+    setStatus("Error getting objectIsRented()");
+  });
+}
+
+function getObjectPrice(objId, callBack) {
+  var rentable = RentableObjects.deployed();
+
+  rentable.getObjectPrice.call(objId, {from: account}).then(function (value) {
+    callBack(parseInt(value));
+  }).catch(function (e) {
+    console.log(e);
+    setStatus("Error executing getObjectPrice()");
+  });
+}
+
+function getObjectDescription(objId, callBack) {
+  var rentable = RentableObjects.deployed();
+
+  rentable.getObjectDescription.call(objId, {from: account}).then(function (value) {
+    callBack(value);
+  }).catch(function (e) {
+    console.log(e);
+    setStatus("Error executing getObjectDescription()");
+  });
+}
+
+function getObjectClientContactInfo(objId, callBack) {
+  var rentable = RentableObjects.deployed();
+
+  rentable.getObjectClientContactInfo.call(objId, {from: account}).then(function (value) {
+    callBack(value);
+  }).catch(function (e) {
+    console.log(e);
+    setStatus("Error executing getObjectClientContactInfo()");
+  });
+}
+
+function getObjectClientAddress(objId, callBack) {
+  var rentable = RentableObjects.deployed();
+
+  rentable.getObjectClientAddress.call(objId, {from: account}).then(function (value) {
+    callBack(value);
+  }).catch(function (e) {
+    console.log(e);
+    setStatus("Error executing getObjectClientAddress()");
+  });
+}
+
+function refreshStatus(objId) {
+  //var rentable = RentableObjects.deployed();
 
   var addressElement = document.getElementById("address");
   addressElement.innerHTML = account;
@@ -68,9 +132,8 @@ function refreshStatus(objId) {
   var objIdElement = document.getElementById("objId");
   objIdElement.innerHTML = objId;
 
-  rentable.objectIsRegistered.call(objId, {from: account}).then(function (value) {
+  objectIsRegistered(objId, function (value) {
     var registeredElement = document.getElementById("registered");
-
     if (value) {
       registeredElement.innerHTML = "";
     }
@@ -78,53 +141,40 @@ function refreshStatus(objId) {
       registeredElement.innerHTML = "not ";
     }
     viewRegisterPage(value);
-
-  }).catch(function (e) {
-    console.log(e);
-    setStatus("Error getting objectIsRegistered()");
   });
 
-  rentable.objectIsRented.call(objId, {from: account}).then(function (value) {
-    var registeredElement = document.getElementById("rented");
-    if (value)
-      registeredElement.innerHTML = "";
-    else
-      registeredElement.innerHTML = "not ";
-  }).catch(function (e) {
-    console.log(e);
-    setStatus("Error getting objectIsRented()");
+  objectIsRented(objId, function(value) {
+    var rentedElement = document.getElementById("rented");
+    if(value) {
+      rentedElement.innerHTML = "";
+    }
+    else {
+        rentedElement.innerHTML = "not ";
+    }
   });
+
 }
 
 function refreshDetails(objId) {
-  var rentable = RentableObjects.deployed();
+  //var rentable = RentableObjects.deployed();
   // Contract abstraction layer for net-deployed contract:
   // var rentable = RentableObject.at(0x....);
 
-  // setStatus("Refreshing object details... (please wait)");
-
-  rentable.getObjectPrice.call(objId, {from: account}).then(function (value) {
+  getObjectPrice(objId, function (value) {
     var priceElement = document.getElementById("price");
     priceElement.innerHTML = parseInt(value);
-  }).catch(function (e) {
-    console.log(e);
-    setStatus("Error executing getObjectPrice()");
   });
 
-  rentable.getObjectDescription.call(objId, {from: account}).then(function (value) {
+
+
+  getObjectDescription(objId, function (value) {
     var descriptionElement = document.getElementById("description");
     descriptionElement.innerHTML = value;
-  }).catch(function (e) {
-    console.log(e);
-    setStatus("Error executing getObjectDescription()");
   });
 
-  rentable.getObjectClientContactInfo.call(objId, {from: account}).then(function (value) {
+  getObjectClientContactInfo(objId, function (value) {
     var contactInfoElement = document.getElementById("contactInfo");
     contactInfoElement.innerHTML = value;
-  }).catch(function (e) {
-    console.log(e);
-    setStatus("Error executing getObjectClientContactInfo()");
   });
 }
 
@@ -135,16 +185,11 @@ function registerObject(objId) {
   var amortizationPeriod = parseInt(document.getElementById("amortizationPeriod").value);
   var description = document.getElementById("description").value;
 
-  console.log(objId);
-  console.log(price);
-  console.log(amortizationPeriod);
-  console.log(description);
-
   setStatus("Registering object... (please wait)");
 
   rentable.addObject(objId, price, description, {from: account}).then(function(success) {
     console.log(success);
-    if (success == 1) {
+    if (success) {
       setStatus("New object registered successfully.");
     }
     else {
