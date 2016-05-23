@@ -1,0 +1,23 @@
+{
+  "private": true,
+  "license": "Apache License, Version 2.0",
+  "author": "Bosch IoT Lab",
+  "name": "ShareApp",
+  "description": "A blockchain enabled app for renting and sharing hardware tools",
+  "version": "0.0.1",
+  "homepage": "",
+  "repository": {
+    "type": "git",
+    "url": ""
+  },
+  "engines": {
+    "node": ">=0.8"
+  },
+  "dependencies": {
+    "qrcode-reader": "latest",
+    "jquery": ">=1.11.0"
+  },
+  "scripts": {
+    "serve": "truffle serve"
+  }
+}
