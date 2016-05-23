@@ -62,8 +62,10 @@
 						<h2>Rent a Bosch Powertool</h2>
 					</header>
 					<p>Switch on your camera and scan a barcode on one of your Bosch power tools.</p>
-          <video id="camsource" autoplay width="640" height="480">We could not detect your camera. Sorry.</video>
-          <canvas id="qr-canvas" width="640" height="480" style="display:none"></canvas>
+          <div id="camcontainer" style="width:100%">
+            <video id="camsource" autoplay>We could not detect your camera. Sorry.</video>
+            <canvas id="qr-canvas" style="display:none"></canvas>
+          </div>
           <h3 id="qr-value">Url:</h3>
 				</div>
 			</article>

@@ -35,7 +35,7 @@ var camera = (function (p_vid_id, p_inter, p_scale) {
     var h = video.videoHeight * scale;
     var qr = new QrCode();
     qr.callback = function (result) {
-      if (/http:/.test(result)) {
+      if (/http[s]*:/.test(result)) {
         console.log(result);
         $("#qr-value").text(result);
       }
@@ -44,7 +44,7 @@ var camera = (function (p_vid_id, p_inter, p_scale) {
     try {
       var qr_can = document.getElementById('qr-canvas').getContext('2d');
       qr_can.drawImage(video, 0, 0, w, h);
-      var data = qr_can.getImageData(0, 0, 640, 480);
+      var data = qr_can.getImageData(0, 0, w, h);
 
       qr.decode(data);
     }
