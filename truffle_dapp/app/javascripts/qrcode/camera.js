@@ -43,7 +43,7 @@ var camera = (function (p_vid_id, p_inter, p_scale) {
         try {
             var qr_can = document.getElementById('qr-canvas').getContext('2d');
             qr_can.drawImage(video, 0, 0, w, h);
-            var data = qr_can.getImageData(0, 0, 320, 240);
+            var data = qr_can.getImageData(0, 0, 640, 480);
 
             qr.decode(data);
         }

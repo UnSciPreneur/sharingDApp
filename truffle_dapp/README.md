@@ -3,16 +3,20 @@
 
 ### Install
 
-Server side:
 ```
-$ npm install -g truffle
-$ truffle build
-```
-
-Client side:
-```
+$ npm install
 $ npm install -g truffle
 $ npm install -g ethereumjs-testrpc
-$ testrpc
-$ truffle deploy
+$ truffle [build|compile|serve]
 ```
+
+You can also run truffle via npm:
+```
+$ npm serve
+```
+
+
+
+### Design
+
+By http://templated.co/ or http://html5up.net/overflow
