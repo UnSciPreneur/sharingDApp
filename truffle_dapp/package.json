@@ -5,10 +5,10 @@
   "name": "ShareApp",
   "description": "A blockchain enabled app for renting and sharing hardware tools",
   "version": "0.0.1",
-  "homepage": "",
+  "homepage": "https://iot-lab.ch",
   "repository": {
     "type": "git",
-    "url": ""
+    "url": "https://github.com/ameeuw/IoTlab_dapp/"
   },
   "engines": {
     "node": ">=0.8"

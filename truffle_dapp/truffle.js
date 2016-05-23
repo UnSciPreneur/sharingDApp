@@ -1,9 +1,10 @@
 module.exports = {
   build: {
     "index.html": "index.html",
+    "index-new.html": "index-new.html",
     "objectIndex.html": "objectIndex.html",
     "scanObject.html": "scanObject.html",
-    "qrcode-reader.js": [
+    "js/qrcode-reader.js": [
       "../node_modules/qrcode-reader/src/grid.js",
       "../node_modules/qrcode-reader/src/version.js",
       "../node_modules/qrcode-reader/src/detector.js",
@@ -22,19 +23,25 @@ module.exports = {
       "../node_modules/qrcode-reader/src/alignpat.js",
       "../node_modules/qrcode-reader/src/databr.js"
     ],
-    "qrcode-init.js": [
+    "js/qrcode-init.js": [
       "javascripts/qrcode/qr.js",
       "javascripts/qrcode/camera.js",
       "javascripts/qrcode/init.js"
     ],
-    "jquery.min.js": "../node_modules/jquery/dist/jquery.min.js",
+    "js/jquery.min.js": "../node_modules/jquery/dist/jquery.min.js",
+    "js/util.js": "assets/js/util.js",
+    "js/main.js": "assets/js/main.js",
+    "js/skel.min.js": "assets/js/skel.min.js",
     "app.js": [
       "javascripts/app.js"
     ],
     "app.css": [
       "stylesheets/app.css"
     ],
-    "images/": "images/"
+    "images/": "images/",
+    "assets/css/": "assets/css/",
+    "assets/fonts/": "assets/fonts/",
+    "assets/js/": "assets/js/"
   },
   deploy: [
     "RentableObjects"
