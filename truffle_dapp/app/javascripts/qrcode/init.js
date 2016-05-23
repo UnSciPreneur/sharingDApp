@@ -8,7 +8,7 @@ window.addEventListener('DOMContentLoaded', function() {
     var video = document.getElementById(cam_video_id);
     var options = {
         "audio": false,
-        "video": {facingMode: {exact: mode}}
+        "video": {facingMode: {exact: false}}
     };
     // Replace the source of the video element with the stream from the camera
     if (navigator.getUserMedia) {
