@@ -2,6 +2,12 @@ var accounts;
 var account;
 var balance;
 
+// Return GET parameter value
+function get(name){
+     if(name=(new RegExp('[?&]'+encodeURIComponent(name)+'=([^&]*)')).exec(location.search))
+        return decodeURIComponent(name[1]);
+}
+
 function toggleAccounts() {
   if (account == accounts[0]) {
     account = accounts[1];
@@ -129,10 +135,16 @@ function registerObject(objId) {
   var amortizationPeriod = parseInt(document.getElementById("amortizationPeriod").value);
   var description = document.getElementById("description").value;
 
+  console.log(objId);
+  console.log(price);
+  console.log(amortizationPeriod);
+  console.log(description);
+
   setStatus("Registering object... (please wait)");
 
-  rentable.addObject(objId, price, description, {from: account}).then(function (success) {
-    if (success) {
+  rentable.addObject(objId, price, description, {from: account}).then(function(success) {
+    console.log(success);
+    if (success == 1) {
       setStatus("New object registered successfully.");
     }
     else {

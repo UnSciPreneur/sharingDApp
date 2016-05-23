@@ -29,14 +29,14 @@ contract RentableObjects {
     return objects[_objId].exists;
   }
 
-  function addObject(uint _objId, uint _price, string _descr) returns (bool) {
+  function addObject(uint _objId, uint _price, string _descr) returns (uint8) {
     if (objectIsRegistered(_objId) == false) {
       Client memory nilClient = Client({cliAddress: 0, contactInfo: "", exists: false});
       objects[_objId] = Object({price: _price, description: _descr, objId: _objId, client: nilClient, created: now, amortizationPeriod: 4 days, exists: true});
-      return true;
+      return 0x00;
     }
     else {
-      return false;
+      return 0xFF;
     }
   }
 
