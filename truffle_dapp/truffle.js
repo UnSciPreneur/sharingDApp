@@ -24,7 +24,6 @@ module.exports = {
       "../node_modules/qrcode-reader/src/databr.js"
     ],
     "js/qrcode-init.js": [
-      "javascripts/qrcode/qr.js",
       "javascripts/qrcode/camera.js",
       "javascripts/qrcode/init.js"
     ],

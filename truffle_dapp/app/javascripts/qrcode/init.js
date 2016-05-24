@@ -1,17 +1,12 @@
 navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia;
 
 var cam_video_id = "camsource";
+var streaming = false;
 
 window.addEventListener('DOMContentLoaded', function () {
   // Assign the <video> element to a variable
   var video = document.getElementById(cam_video_id);
-  var canvas = document.getElementById("qr-canvas");
-  var camcontainer = document.getElementById("camcontainer");
 
-  video.setAttribute("width", camcontainer.clientWidth);
-  video.setAttribute("height", camcontainer.clientWidth * 75 / 100);
-  canvas.setAttribute("width", camcontainer.clientWidth);
-  canvas.setAttribute("height", camcontainer.clientWidth * 75 / 100);
   var options = {
     "audio": false,
     "video": {facingMode: {exact: 'environment'}}
@@ -28,6 +23,31 @@ window.addEventListener('DOMContentLoaded', function () {
   } else {
     $("#qr-value").text('Sorry, native web camera streaming (getUserMedia) is not supported by this browser...');
   }
+
+  video.addEventListener('canplay', function(ev){
+    var canvas = document.getElementById("qr-canvas");
+    var camcontainer = document.getElementById("camcontainer");
+
+    var width = camcontainer.clientWidth;
+
+    if (!streaming) {
+      var height = video.videoHeight / (video.videoWidth/width);
+
+      // Firefox currently has a bug where the height can't be read from
+      // the video, so we will make assumptions if this happens.
+
+      if (isNaN(height)) {
+        height = width / (4/3);
+      }
+
+      video.setAttribute('width', width);
+      video.setAttribute('height', height);
+      canvas.setAttribute('width', width);
+      canvas.setAttribute('height', height);
+      streaming = true;
+    }
+  }, false);
+
 }, false);
 
 $(document).ready(function () {
