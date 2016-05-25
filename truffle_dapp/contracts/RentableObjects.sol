@@ -110,11 +110,7 @@ contract RentableObjects {
       return false;
     }
   }
-
-  function getAccountBalance(address _account) returns (uint) {
-    return _account.balance;
-  }
-
+  
   function getObjectClientAddress(uint _objId) returns (address) {
     return objects[_objId].client.cliAddress;
   }

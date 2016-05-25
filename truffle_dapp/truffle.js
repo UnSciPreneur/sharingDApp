@@ -1,6 +1,7 @@
 module.exports = {
   build: {
     "index.html": "index.html",
+    "test.html": "test.html",
     "index-new.html": "index-new.html",
     "objectIndex.html": "objectIndex.html",
     "scanObject.html": "scanObject.html",

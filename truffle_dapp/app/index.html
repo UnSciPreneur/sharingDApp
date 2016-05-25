@@ -10,6 +10,7 @@
       web3.eth.getAccounts(function(err, accs) {
         if (err != null) {
           alert("There was an error fetching your accounts.");
+          console.log(err, accs);
           return;
         }
 
@@ -20,7 +21,6 @@
 
         accounts = accs;
         account = accounts[0];
-
         refreshBalance(account);
 
         var objIdElement = document.getElementById("_objId");
@@ -43,6 +43,10 @@
   <br><label for="_objId">Object Id:</label><input type="text" id="_objId" placeholder="0x93e66d9" onchange="refreshStatus(this.value);refreshDetails(this.value);switchPageView(this.value);"></input>
   <h3>You have <span class="black"><span id="balance"></span> Ether</span></h3>
   <span id="status"></span><br>
+
+<div id="loadingDiv" style="display:none">
+  <img src="./images/colorful_loading.gif">
+</div>
 
 
 <!-- Beginning of pages switching in switchPageView -->

@@ -1,6 +1,8 @@
 var accounts;
 var account;
 var balance;
+var finney = 1/1000;
+var wei = 1/1000000000000000000;
 
 function switchPageView(objId) {
 
@@ -78,11 +80,21 @@ function toggleAccounts() {
   }
   var addressElement = document.getElementById("address");
   addressElement.innerHTML = account;
+  refreshBalance(account);
 }
 
 function setStatus(message) {
   var status = document.getElementById("status");
   status.innerHTML = message;
+}
+
+function setLoading(show) {
+  if (show) {
+    document.getElementById("loadingDiv").style.display="inline";
+  }
+  else {
+    document.getElementById("loadingDiv").style.display="none";
+  }
 }
 
 function refreshBalance() {
@@ -91,14 +103,9 @@ function refreshBalance() {
   var addressElement = document.getElementById("address");
   addressElement.innerHTML = account;
 
-  rentable.getAccountBalance.call(account, {from: account}).then(function (value) {
-    var balanceElement = document.getElementById("balance");
-    if (balanceElement != null)
-      balanceElement.innerHTML = value.valueOf();
-  }).catch(function (e) {
-    console.log(e);
-    setStatus("Error executing getAccountBalance(); see log.");
-  });
+  var balance = web3.eth.getBalance(account) * wei;
+  var balanceElement = document.getElementById("balance");
+  balanceElement.innerHTML = balance.toFixed(3);
 }
 
 function viewRegisterPage(state) {
@@ -195,7 +202,7 @@ function getObjectClientAddress(objId, callBack) {
 
 function refreshStatus(objId) {
   //var rentable = RentableObjects.deployed();
-
+  setStatus("Refreshing object status...");
   var addressElement = document.getElementById("address");
   addressElement.innerHTML = account;
 
@@ -230,9 +237,11 @@ function refreshDetails(objId) {
   // Contract abstraction layer for net-deployed contract:
   // var rentable = RentableObject.at(0x....);
 
+  setStatus("Refreshing object details...");
   getObjectPrice(objId, function (value) {
     var priceElement = document.getElementById("price");
-    priceElement.innerHTML = parseInt(value);
+    var price = parseInt(value) * wei;
+    priceElement.innerHTML = price.toFixed(4);
   });
 
   getObjectDescription(objId, function (value) {
@@ -264,7 +273,9 @@ function registerObject(objId) {
   console.log(objId);
 
   setStatus("Registering object... (please wait)");
-  rentable.addObject(objId, price, description, {from: account}).then(function(regSuccess) {
+  setLoading(true);
+  setTimeout(function(){ setLoading(false); }, 3000);
+  rentable.addObject(objId, price, description, {from: account, gas: 1000000}).then(function(regSuccess) {
     if (regSuccess) {
       setStatus("New object registered successfully.");
     }
@@ -278,12 +289,14 @@ function registerObject(objId) {
   });
 }
 
+
+
 function unregisterObject(objId) {
   var rentable = RentableObjects.deployed();
 
   setStatus("Unregistering object... (please wait)");
 
-  rentable.removeObject(objId, {from: account}).then(function (success) {
+  rentable.removeObject(objId, {from: account, gas: 1000000}).then(function (success) {
     if (success) {
       setStatus("Object removed successfully.");
       refreshStatus(account);
@@ -305,7 +318,7 @@ function rentObject(objId) {
     var rentable = RentableObjects.deployed();
     var contactInfo = document.getElementById("_contactInfo").value;
 
-    rentable.rentObject(objId, contactInfo, {from: account, value: objPrice}).then(function(success) {
+    rentable.rentObject(objId, contactInfo, {from: account, value: objPrice, gas: 1000000}).then(function(success) {
       if (success) {
         setStatus("Object successfully rented.");
       }
@@ -324,7 +337,7 @@ function returnObject(objId) {
 
   var rentable = RentableObjects.deployed();
 
-  rentable.returnObject(objId, {from: account}).then(function(success) {
+  rentable.returnObject(objId, {from: account, gas: 1000000}).then(function(success) {
     if (success) {
       setStatus("Object successfully returned.");
     }
