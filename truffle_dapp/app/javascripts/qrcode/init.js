@@ -15,7 +15,7 @@ function deactivateCam() {
   video.removeEventListener("canplay",resizeCamCanvas);
   video.style.display = "none";
 
-  $("#cambutton").html("Activate camera");
+  $("#cambutton").html("Activate Camera");
   $("#cambutton").unbind();
   $("#cambutton").click(function () {
     activateCam()
@@ -55,7 +55,7 @@ function resizeCamCanvas() {
 function activateCam() {
   console.log("Camera activated");
 
-  $("#cambutton").html("Deactivate camera");
+  $("#cambutton").html("Deactivate Camera");
   $("#cambutton").unbind();
   $("#cambutton").click(function () {
     deactivateCam()

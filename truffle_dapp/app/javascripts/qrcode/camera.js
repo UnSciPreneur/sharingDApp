@@ -40,7 +40,17 @@ var camera = (function (p_vid_id, p_inter, p_scale) {
     qr.callback = function (result) {
       if (/http[s]*:/.test(result)) {
         console.log(Date.now() + ': ' + result);
-        $("#qr-value").text(result);
+        //$("#qr-value").text(result);
+
+        deactivateCam();
+        // select the object for registration/renting/return/...
+        // we are assuming 5-digit all numeric ids for simplicity
+        var objId = parseInt(result.substr(-5));
+        _objId.value = objId;
+        switchPageView(objId);
+
+        //ToDo: make this scroll smoothly
+        location.hash = "#contextmenu";
       }
     };
 

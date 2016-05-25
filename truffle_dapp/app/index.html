@@ -1,13 +1,26 @@
 <!DOCTYPE html>
+<!--
+	Overflow by HTML5 UP
+	html5up.net | @n33co
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
 <html>
 <head>
-  <title>Bosch Rentable Objects</title>
+  <title>ShareApp: Bosch powertools</title>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <!--[if lte IE 8]>
+  <script src="assets/js/ie/html5shiv.js"></script><![endif]-->
+  <link rel="stylesheet" href="assets/css/main.css"/>
+  <!--[if lte IE 8]>
+  <link rel="stylesheet" href="assets/css/ie8.css"/><![endif]-->
+  <script type="text/javascript" src="./js/jquery.min.js"></script>
   <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
-  <link href="./app.css" rel='stylesheet' type='text/css'>
+  <!--<link href="./app.css" rel='stylesheet' type='text/css'>-->
   <script src="./app.js"></script>
   <script>
-    window.onload = function() {
-      web3.eth.getAccounts(function(err, accs) {
+    window.onload = function () {
+      web3.eth.getAccounts(function (err, accs) {
         if (err != null) {
           alert("There was an error fetching your accounts.");
           console.log(err, accs);
@@ -37,57 +50,174 @@
   </script>
 </head>
 <body>
-  <button id="toggleAccounts" onclick="toggleAccounts();switchPageView(_objId.value);">Toggle Accounts</button>
-  <h4><span class="black"><span id="address"></span></span></h4>
-  <h2>Select an object to rent</h2>
-  <br><label for="_objId">Object Id:</label><input type="text" id="_objId" placeholder="0x93e66d9" onchange="refreshStatus(this.value);refreshDetails(this.value);switchPageView(this.value);"></input>
-  <h3>You have <span class="black"><span id="balance"></span> Ether</span></h3>
-  <span id="status"></span><br>
-
+<!--
 <div id="loadingDiv" style="display:none">
   <img src="./images/colorful_loading.gif">
 </div>
+-->
 
+<!-- Header -->
+<section id="header">
+  <header>
+    <h1>ShareApp</h1>
+    <p>By <a href="http://iot-lab.ch">Bosch IoT Lab</a></p>
+  </header>
+  <footer>
+    <a href="#banner" class="button style2 scrolly-middle">Rent now!</a>
+  </footer>
+</section>
+
+<!-- Banner -->
+<section id="banner">
+  <header>
+    <h2>Renting tools on the blockchain</h2>
+  </header>
+  <p style="max-width:1000px; margin: auto">This app let's you rent power tools directly from the Ethereum blockchain.
+    All you need is an Ethereum client. No upfront registration, no third party billing.</p>
+  <h3>This is how it works</h3>
+  <p>1. Scan the barcode on a tool of your choice.</p>
+  <p>2. Read and sign the rental agreement.</p>
+  <p>3. Recollect your deposit on return of the tool.</p>
+  <footer>
+    <a href="#account" class="button style2 scrolly">Let's do this!</a>
+  </footer>
+</section>
+
+<article id="account" class="container box style1">
+  <div class="inner">
+    <header><h2>Your account</h2></header>
+    <h4><span class="black"><span id="address"></span></span></h4>
+
+    <h3>You have <span class="black"><span id="balance"></span> Ether</span></h3>
+    <span id="status"></span><br>
+
+    <button id="toggleAccounts" onclick="toggleAccounts();">Toggle Accounts</button>
+  </div>
+</article>
+
+<!-- Feature 2 -->
+<article id="first" class="container box style1">
+  <div class="inner">
+    <header>
+      <h2>Select a Bosch Powertool</h2>
+    </header>
+    <p>Switch on your camera and scan a barcode on one of a Bosch power tool.</p>
+    <button id="cambutton">Activate Camera</button>
+
+    <div id="camcontainer" style="width:100%; overflow:hidden; position: relative;">
+      <video id="camsource" autoplay style="position: relative; display: none;">We could not detect your camera. Sorry.
+      </video>
+      <canvas id="qr-canvas" style="display:none"></canvas>
+    </div>
+
+    <!--
+    <h3 id="qr-value">Url:</h3>
+
+    <h2>Select an object to rent</h2>
+    <br><label for="_objId">Object Id:</label>
+    <input type="text" id="_objId" placeholder="0x93e66d9"
+           onchange="refreshStatus(this.value);refreshDetails(this.value);switchPageView(this.value);"> -->
+  </div>
+</article>
 
 <!-- Beginning of pages switching in switchPageView -->
 
-<!-- Page with object information -->
-  <div id="objectInformation" style="display:none;">
-    <h4>Object ID is: <span class="black"><span id="objId"></span></span></h4>
-    <h4>This device is <span class="black"><span id="registered"></span></span>registered.</h4>
-    <h4>This device is <span class="black"><span id="rented"></span></span>rented.</h4>
-    <h4>Price: <span class="black"><span id="price"></span> Ether</span></h4>
-    <h4><span class="black"><span id="description"></span></span></h4>
-    <h4>Contact info: <span class="black"><span id="contactInfo"></span></span></h4>
-  </div>
+<article id="contextmenu" class="container box style1">
+  <div class="inner">
+    <header><h2>Context menu</h2></header>
 
-<!-- Page to show information for the current renter -->
-  <div id="rentOverview" style="display:none;">
-    <h3>Rental Overview</h3><br>
-    <h4>You have rented this device for <span class="black"><span id="clientTime"></span></span> seconds.</h4>
-    <br><br><button id="rentObject" onclick="returnObject(_objId.value);switchPageView(_objId.value);">Return Object</button>
-  </div>
+    <!-- Page with object information -->
+    <div id="objectInformation" style="display:none;">
+      <!-- <h4>Object ID is: <span class="black"><span id="objId"></span></span></h4>
+        <h4>This device is <span class="black"><span id="registered"></span></span>registered.</h4>
+        <h4>This device is <span class="black"><span id="rented"></span></span>rented.</h4>
+        <h4>Price: <span class="black"><span id="price"></span> Ether</span></h4>
+        <h4><span class="black"><span id="description"></span></span></h4>
+        <h4>Contact info: <span class="black"><span id="contactInfo"></span></span></h4> -->
+    </div>
 
-<!-- Page with renting information -->
-  <div id="rentingPage" style="display:none;">
-    <br><label for="_contactInfo">Your contact info:</label><input type="text" id="_contactInfo" placeholder="Telephone number, address etc. ..."></input>
-    <br><br><button id="rentObject" onclick="rentObject(_objId.value);switchPageView(_objId.value);">Rent Object</button>
-  </div>
+    <!-- Page to show information for the current renter -->
+    <div id="rentOverview" style="display:none;">
+      <h3>Rental Overview</h3><br>
+      <h4>You have rented this device for <span class="black"><span id="clientTime"></span></span> seconds.</h4>
+      <br><br><button id="returnObject" onclick="returnObject(_objId.value);switchPageView(_objId.value);">Return Object</button>
+    </div>
 
-<!-- Page to register a new object -->
-  <div id="registerPage" style="display:none;">
-    <h1>Register this device:</h1>
-    <br><label for="_price">Price:</label><input type="number" id="_price" placeholder="e.g., 95"></input>
-    <br><label for="_amortizationPeriod">Amortization period:</label><input type="number" id="_amortizationPeriod" placeholder="4 weeks"></input>
-    <br><label for="_description">Object description:</label><input type="text" id="_description" placeholder="Bosch Bohrmaschine..."></input>
-    <br><br><button id="register" onclick="registerObject(_objId.value);switchPageView(_objId.value);">Register Object</button>
-  </div>
+    <!-- Page with renting information -->
+    <div id="rentingPage" style="display:none;">
+      <h4>Object ID is: <span class="black"><span id="objId"></span></span></h4>
+      <h4>Price: <span class="black"><span id="price"></span> Ether</span></h4>
+      <h4><span class="black"><span id="description"></span></span></h4>
+      <h4>Contact info: <span class="black"><span id="contactInfo"></span></span></h4>
 
-<!-- 404 Object not found page -->
-  <div id="notFoundPage" style="display:none;">
-    Object not found<br>
-    We are sorry to tell that we could not find the object you are looking for...
+      <br><br>
+      <button id="rentObject" onclick="rentObject(_objId.value);switchPageView(_objId.value);">Rent Object</button>
+    </div>
+
+    <!-- Page to register a new object -->
+    <div id="registerPage" style="display:none;">
+      <h1>Register this device:</h1>
+      <table style="text-align: left; margin-top: 20px">
+        <tr>
+          <td><label for="_objId">Object Id:</label></td>
+          <td><input type="text" id="_objId" disabled></td>
+        </tr>
+        <tr>
+          <td><label for="_description">Object description:</label></td>
+          <td><input type="text" id="_description" placeholder="Bosch Bohrmaschine"></td>
+        </tr>
+        <tr>
+          <td><label for="_price">Price per day:</label></td>
+          <td><input type="number" id="_price" placeholder="e.g., 5"></td>
+        </tr>
+        <tr>
+          <td><label for="_deposit">Deposit:</label></td>
+          <td><input type="number" id="_deposit" placeholder="e.g., 95"></td>
+        </tr>
+      </table>
+      <button id="register" onclick="registerObject(_objId.value);switchPageView(_objId.value);">Register Object
+      </button>
+    </div>
+
+
+    <!-- 404 Object not found page -->
+    <div id="notFoundPage" style="display:none;">
+      Object not found<br>
+      We are sorry to tell that we could not find the object you are looking for...
+    </div>
   </div>
+</article>
+
+<section id="footer">
+  <ul class="icons">
+    <li><a href="#" class="icon fa-twitter"><span class="label">Twitter</span></a></li>
+    <li><a href="#" class="icon fa-facebook"><span class="label">Facebook</span></a></li>
+    <li><a href="#" class="icon fa-google-plus"><span class="label">Google+</span></a></li>
+    <li><a href="#" class="icon fa-pinterest"><span class="label">Pinterest</span></a></li>
+    <li><a href="#" class="icon fa-dribbble"><span class="label">Dribbble</span></a></li>
+    <li><a href="#" class="icon fa-linkedin"><span class="label">LinkedIn</span></a></li>
+  </ul>
+  <div class="copyright">
+    <ul class="menu">
+      <li>&copy; Bosch IoT Lab. All rights reserved.</li>
+      <li>Design: <a href="http://html5up.net">HTML5 UP</a></li>
+    </ul>
+  </div>
+</section>
+
+<!-- Scripts -->
+<script src="https://webrtc.github.io/adapter/adapter-latest.js"></script>
+<script type="text/javascript" src="./js/qrcode-reader.js"></script>
+<script type="text/javascript" src="./js/qrcode-init.js"></script>
+
+<!-- <script src="js/jquery.min.js"></script>  -->
+<script src="assets/js/jquery.scrolly.min.js"></script>
+<script src="assets/js/jquery.poptrox.min.js"></script>
+<script src="assets/js/skel.min.js"></script>
+<script src="assets/js/util.js"></script>
+<!--[if lte IE 8]>
+<script src="assets/js/ie/respond.min.js"></script><![endif]-->
+<script src="assets/js/main.js"></script>
 
 </body>
 </html>

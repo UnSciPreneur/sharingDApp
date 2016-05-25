@@ -263,18 +263,20 @@ function refreshDetails(objId) {
 function registerObject(objId) {
   var rentable = RentableObjects.deployed();
   var price = parseInt(document.getElementById("_price").value);
-  var amortizationPeriod = parseInt(document.getElementById("_amortizationPeriod").value);
+  var deposit = parseInt(document.getElementById("_deposit").value);
   var description = document.getElementById("_description").value;
 
   console.log(rentable);
   console.log(price);
-  console.log(amortizationPeriod);
+  console.log(deposit);
   console.log(description);
   console.log(objId);
 
   setStatus("Registering object... (please wait)");
   setLoading(true);
   setTimeout(function(){ setLoading(false); }, 3000);
+
+  // ToDo: we should store the value for deposit here, shouldn't we?
   rentable.addObject(objId, price, description, {from: account, gas: 1000000}).then(function(regSuccess) {
     if (regSuccess) {
       setStatus("New object registered successfully.");
