@@ -24,6 +24,7 @@ var camera = (function (p_vid_id, p_inter, p_scale) {
     int_id = setInterval(function (video, scale) {
       capture()
     }, interval);
+    console.log("Setting interval with id " + int_id);
   }
 
   function stop() {

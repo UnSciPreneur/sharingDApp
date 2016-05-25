@@ -3,26 +3,65 @@ navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia 
 var cam_video_id = "camsource";
 var streaming = false;
 
-$("#cambutton").click(function () {activateCam()});
+$("#cambutton").click(function () {
+  activateCam()
+});
 
 function deactivateCam() {
   cam.stop();
   console.log("Camera deactivated");
 
-  $("#camcontainer").html("<canvas id=\"qr-canvas\" style=\"display:none\"></canvas>");
+  var video = document.getElementById(cam_video_id);
+  video.removeEventListener("canplay",resizeCamCanvas);
+  video.style.display = "none";
 
   $("#cambutton").html("Activate camera");
-  $("#cambutton").click(function () {activateCam()});
+  $("#cambutton").unbind();
+  $("#cambutton").click(function () {
+    activateCam()
+  });
 
   streaming = false;
+}
+
+function resizeCamCanvas() {
+  console.log("Resizing camera canvas");
+  var video = document.getElementById(cam_video_id);
+  var canvas = document.getElementById("qr-canvas");
+
+  var width = camcontainer.clientWidth;
+  camcontainer.setAttribute('height', width);
+
+  if (!streaming) {
+    var height = video.videoHeight / (video.videoWidth / width);
+
+    // Firefox currently has a bug where the height can't be read from
+    // the video, so we will make assumptions if this happens.
+
+    if (isNaN(height)) {
+      height = width / (4 / 3);
+    }
+
+    video.setAttribute('width', width * width / height);
+    video.setAttribute('height', width);
+    // the following does not work reliably
+    video.setAttribute('margin-left', -(width * width / height - width) / 2 + "px");
+    canvas.setAttribute('width', width);
+    canvas.setAttribute('height', height);
+    streaming = true;
+  }
 }
 
 function activateCam() {
   console.log("Camera activated");
 
   $("#cambutton").html("Deactivate camera");
-  $("#cambutton").click(function () {deactivateCam()});
-  $("#camcontainer").html("<video id=\"camsource\" autoplay style=\"position: relative; display: inline-block\">We could not detect your camera. Sorry.</video><canvas id=\"qr-canvas\" style=\"display:none\"></canvas>");
+  $("#cambutton").unbind();
+  $("#cambutton").click(function () {
+    deactivateCam()
+  });
+  var video = document.getElementById(cam_video_id);
+  video.style.display = "inline-block";
 
   startRecoding();
 
@@ -48,36 +87,15 @@ function activateCam() {
     $("#qr-value").text('Sorry, native web camera streaming (getUserMedia) is not supported by this browser...');
   }
 
-  video.addEventListener('canplay', function(ev){
-    var canvas = document.getElementById("qr-canvas");
-
-    var width = camcontainer.clientWidth;
-    camcontainer.setAttribute('height', width);
-
-    if (!streaming) {
-      var height = video.videoHeight / (video.videoWidth/width);
-
-      // Firefox currently has a bug where the height can't be read from
-      // the video, so we will make assumptions if this happens.
-
-      if (isNaN(height)) {
-        height = width / (4/3);
-      }
-
-      video.setAttribute('width', width*width/height);
-      video.setAttribute('height', width);
-      // the following does not work reliably
-      video.setAttribute('margin-left', - (width*width/height - width)/2 + "px");
-      canvas.setAttribute('width', width);
-      canvas.setAttribute('height', height);
-      streaming = true;
-    }
-  }, false);
+  video.addEventListener('canplay', resizeCamCanvas(), false);
 
 }
 
-function startRecoding(){
+function startRecoding() {
   if (!navigator.getUserMedia) return;
-  cam = camera(cam_video_id);
-  cam.start()
+
+  if(typeof cam == 'undefined') {
+    cam = camera(cam_video_id);
+  }
+  cam.start();
 }
