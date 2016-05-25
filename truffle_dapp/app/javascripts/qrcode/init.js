@@ -42,10 +42,10 @@ function resizeCamCanvas() {
       height = width / (4 / 3);
     }
 
-    video.setAttribute('width', width * width / height);
-    video.setAttribute('height', width);
+    video.style.width = width * width / height;
+    video.style.height = width;
     // the following does not work reliably
-    video.setAttribute('margin-left', -(width * width / height - width) / 2 + "px");
+    //video.style.marginLeft = -(width * width / height - width) / 2 + "px";
     canvas.setAttribute('width', width);
     canvas.setAttribute('height', height);
     streaming = true;
