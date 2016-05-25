@@ -2,6 +2,8 @@
  The files in this package are taken from
  https://github.com/asbjornenge/jsqrcode-scanner
  However, I have replaced the dependencies by more recent node packages.
+
+ Also see https://developer.mozilla.org/en-US/docs/Web/API/WebRTC_API/Taking_still_photos
  */
 
 var camera = (function (p_vid_id, p_inter, p_scale) {
@@ -35,8 +37,8 @@ var camera = (function (p_vid_id, p_inter, p_scale) {
     var h = video.videoHeight * scale;
     var qr = new QrCode();
     qr.callback = function (result) {
-      if (/http:/.test(result)) {
-        console.log(result);
+      if (/http[s]*:/.test(result)) {
+        console.log(Date.now() + ': ' + result);
         $("#qr-value").text(result);
       }
     };
@@ -44,7 +46,7 @@ var camera = (function (p_vid_id, p_inter, p_scale) {
     try {
       var qr_can = document.getElementById('qr-canvas').getContext('2d');
       qr_can.drawImage(video, 0, 0, w, h);
-      var data = qr_can.getImageData(0, 0, 640, 480);
+      var data = qr_can.getImageData(0, 0, w, h);
 
       qr.decode(data);
     }
