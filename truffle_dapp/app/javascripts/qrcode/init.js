@@ -3,9 +3,32 @@ navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia 
 var cam_video_id = "camsource";
 var streaming = false;
 
-window.addEventListener('DOMContentLoaded', function () {
+$("#cambutton").click(function () {activateCam()});
+
+function deactivateCam() {
+  cam.stop();
+  console.log("Camera deactivated");
+
+  $("#camcontainer").html("<canvas id=\"qr-canvas\" style=\"display:none\"></canvas>");
+
+  $("#cambutton").html("Activate camera");
+  $("#cambutton").click(function () {activateCam()});
+
+  streaming = false;
+}
+
+function activateCam() {
+  console.log("Camera activated");
+
+  $("#cambutton").html("Deactivate camera");
+  $("#cambutton").click(function () {deactivateCam()});
+  $("#camcontainer").html("<video id=\"camsource\" autoplay style=\"position: relative; display: inline-block\">We could not detect your camera. Sorry.</video><canvas id=\"qr-canvas\" style=\"display:none\"></canvas>");
+
+  startRecoding();
+
   // Assign the <video> element to a variable
   var video = document.getElementById(cam_video_id);
+  var camcontainer = document.getElementById("camcontainer");
 
   var options = {
     "audio": false,
@@ -15,6 +38,7 @@ window.addEventListener('DOMContentLoaded', function () {
   if (navigator.getUserMedia) {
     navigator.getUserMedia(options, function (stream) {
       video.src = (window.URL && window.URL.createObjectURL(stream)) || stream;
+      video.width = camcontainer.clientWidth;
     }, function (error) {
       console.log(error)
     });
@@ -26,9 +50,9 @@ window.addEventListener('DOMContentLoaded', function () {
 
   video.addEventListener('canplay', function(ev){
     var canvas = document.getElementById("qr-canvas");
-    var camcontainer = document.getElementById("camcontainer");
 
     var width = camcontainer.clientWidth;
+    camcontainer.setAttribute('height', width);
 
     if (!streaming) {
       var height = video.videoHeight / (video.videoWidth/width);
@@ -40,18 +64,20 @@ window.addEventListener('DOMContentLoaded', function () {
         height = width / (4/3);
       }
 
-      video.setAttribute('width', width);
-      video.setAttribute('height', height);
+      video.setAttribute('width', width*width/height);
+      video.setAttribute('height', width);
+      // the following does not work reliably
+      video.setAttribute('margin-left', - (width*width/height - width)/2 + "px");
       canvas.setAttribute('width', width);
       canvas.setAttribute('height', height);
       streaming = true;
     }
   }, false);
 
-}, false);
+}
 
-$(document).ready(function () {
+function startRecoding(){
   if (!navigator.getUserMedia) return;
   cam = camera(cam_video_id);
   cam.start()
-});
+}

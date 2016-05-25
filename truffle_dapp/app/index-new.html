@@ -15,9 +15,6 @@
   <!--[if lte IE 8]>
   <link rel="stylesheet" href="assets/css/ie8.css"/><![endif]-->
   <script type="text/javascript" src="./js/jquery.min.js"></script>
-  <script type="text/javascript" src="./js/qrcode-reader.js"></script>
-  <script type="text/javascript" src="./js/qrcode-init.js"></script>
-  <script src="https://webrtc.github.io/adapter/adapter-latest.js"></script>
 </head>
 <body>
 
@@ -64,15 +61,14 @@
 -->
 
 <!-- Feature 2 -->
-<article class="container box style1">
+<article id="first" class="container box style1">
   <div class="inner">
     <header>
       <h2>Rent a Bosch Powertool</h2>
     </header>
     <p>Switch on your camera and scan a barcode on one of a Bosch power tool.</p>
-    <div id="camcontainer" style="width:100%">
-      <video id="camsource" autoplay>We could not detect your camera. Sorry.</video>
-      <canvas id="qr-canvas" style="display:none"></canvas>
+    <div id="cambutton" style="width:100%; background: #555; text-align: center">Activate camera</div>
+    <div id="camcontainer" style="width:100%; overflow:hidden; position: relative">
     </div>
     <h3 id="qr-value">Url:</h3>
   </div>
@@ -300,7 +296,11 @@
 </section>
 
 <!-- Scripts -->
-<script src="js/jquery.min.js"></script>
+<script src="https://webrtc.github.io/adapter/adapter-latest.js"></script>
+<script type="text/javascript" src="./js/qrcode-reader.js"></script>
+<script type="text/javascript" src="./js/qrcode-init.js"></script>
+
+<!-- <script src="js/jquery.min.js"></script>  -->
 <script src="assets/js/jquery.scrolly.min.js"></script>
 <script src="assets/js/jquery.poptrox.min.js"></script>
 <script src="assets/js/skel.min.js"></script>
