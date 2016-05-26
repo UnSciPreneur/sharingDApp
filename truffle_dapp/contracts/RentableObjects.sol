@@ -29,7 +29,7 @@ contract RentableObjects {
 
   function registerObject(uint _objId, uint _deposit, uint _pricePerDay, string _descr) returns (bool) {
     if (objectIsRegistered(_objId) == false) {
-      Client memory nilClient = Client({cliAddress: 0, contactInfo: "", since: 0, exists: false});
+      Client memory nilClient = Client({cliAddress: 0, contactInfo: "", since: now, exists: false});
       objects[_objId] = Object({objId: _objId, description: _descr, deposit: _deposit, pricePerDay: _pricePerDay, client: nilClient, created: now, owner: msg.sender, exists: true});
       return true;
     }
@@ -68,9 +68,9 @@ contract RentableObjects {
 
   function returnObject(uint _objId) returns (bool) {
     if ( (objectIsRented(_objId) == true) && (msg.sender == getObjectClientAddress(_objId)) ) {
-      objects[_objId].client = Client({cliAddress: 0, contactInfo: "", since: 0, exists: false});
-      msg.sender.send(getReturnDeposit(_objId, getObjectClientTime(_objId)));
-       return true;
+      msg.sender.send(getReturnDeposit(_objId));
+      objects[_objId].client = Client({cliAddress: 0, contactInfo: "", since: now, exists: false});
+      return true;
     }
     else {
       throw;
@@ -91,18 +91,15 @@ contract RentableObjects {
     }
   }
 
-  function getReturnDeposit(uint _objId, uint _clientTime) returns (uint) {
+  function getReturnDeposit(uint _objId) returns (uint) {
     uint day = 86400;
-    uint daysRented = ( _clientTime - 1) / day + 1;
+    uint clientTime = getObjectClientTime(_objId);
+    uint daysRented = ( (clientTime - 1) / day ) + 1;
     uint rentalCost = daysRented * objects[_objId].pricePerDay;
     uint returnDeposit = objects[_objId].deposit - rentalCost;
     return returnDeposit;
   }
-
-  function getNow() returns (uint) {
-    return now;
-  }
-
+  
   function getObjectDeposit(uint _objId) returns (uint) {
     return objects[_objId].deposit;
   }

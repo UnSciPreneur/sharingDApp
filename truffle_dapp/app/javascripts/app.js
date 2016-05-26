@@ -4,6 +4,12 @@ var balance;
 var finney = 1/1000;
 var wei = 1/1000000000000000000;
 
+// blockCreator is a function for testRPC to mine an on demand block every 30 seconds
+var blockCreator = setInterval(function(){
+  console.log("Creating Block.");
+  web3.eth.sendTransaction({from:accounts[2], to:accounts[2], value: 5});
+}, 30000);
+
 function switchPageView(objId) {
 
   objectIsRegistered(objId, function(registered) {
@@ -125,13 +131,6 @@ function viewRegisterPage(state) {
 
 function objectIsRegistered(objId, callBack) {
   var rentable = RentableObjects.deployed();
-
-  rentable.getNow.call({from: account}).then(function(value) {
-    console.log("Now: ", value.c[0]);
-  }).catch(function (e) {
-    console.log(e);
-    setStatus("Error getting objectIsRegistered()");
-  });
 
   rentable.objectIsRegistered.call(objId, {from: account}).then(function(value) {
     callBack(value);
@@ -372,9 +371,11 @@ function returnObject(objId) {
 
   rentable.returnObject(objId, {from: account, gas: 1000000}).then(function(success) {
     if (success) {
+      console.log("Object successfully returned.");
       setStatus("Object successfully returned.");
     }
     else {
+      console.log("Returning object not possible. Please try again.");
       setStatus("Returning object not possible. Please try again.");
     }
   }).catch(function (e) {
