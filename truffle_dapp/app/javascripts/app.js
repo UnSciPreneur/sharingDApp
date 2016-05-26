@@ -11,6 +11,8 @@ var blockCreator = setInterval(function(){
 }, 30000);
 
 function switchPageView(objId) {
+  refreshStatus(objId);
+  refreshDetails(objId);
 
   objectIsRegistered(objId, function(registered) {
     if (registered) {
@@ -218,7 +220,6 @@ function getObjectClientAddress(objId, callBack) {
   }
 
 function refreshStatus(objId) {
-  //var rentable = RentableObjects.deployed();
 
   var addressElement = document.getElementById("address");
   addressElement.innerHTML = account;
@@ -250,7 +251,6 @@ function refreshStatus(objId) {
 }
 
 function refreshDetails(objId) {
-  //var rentable = RentableObjects.deployed();
   // Contract abstraction layer for net-deployed contract:
   // var rentable = RentableObject.at(0x....);
 

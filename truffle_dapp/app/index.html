@@ -19,8 +19,6 @@
   <!-- <link href="./app.css" rel='stylesheet' type='text/css'> -->
   <script src="./app.js"></script>
   <script>
-    var objId;
-
     window.onload = function () {
       web3.eth.getAccounts(function (err, accs) {
         if (err != null) {
@@ -35,19 +33,24 @@
         }
 
         accounts = accs;
-        account = accounts[0];
+
+        var accNum = parseInt(get('accNum'));
+        console.log(accNum);
+        if ( (accNum == 0) || (accNum == 1) || (accNum == 2) ) {
+          console.log("Switching to Account:", accNum);
+          account = accounts[accNum];
+        }
+        else {
+          account = accounts[0];
+        }
+
         refreshBalance(account);
 
         var objIdElement = document.getElementById("_objId");
         var _objId = get('objId');
         if (_objId != undefined) {
-          objId = _objId;
-
-          objIdElement.value = objId;
-          refreshStatus(objId);
-          refreshDetails(objId);
-
-          switchPageView(objId);
+          objIdElement.value = _objId;
+          switchPageView(_objId);
         }
       });
     }
@@ -121,7 +124,7 @@
     <h2>Select an object to rent</h2>
     <br><label for="_objId">Object Id:</label>
     <input type="text" id="_objId" placeholder="0x93e66d9"
-           onchange="refreshStatus(this.value);refreshDetails(this.value);switchPageView(this.value);"> -->
+           onchange="switchPageView(this.value);"> -->
   </div>
 </article>
 
@@ -207,7 +210,7 @@
           <td><input type="number" id="_deposit" placeholder="e.g., 95"></td>
         </tr>
       </table>
-      <button id="register" onclick="registerObject(objId);switchPageView(objId);">Register Object
+      <button id="register" onclick="registerObject(_objId.value);switchPageView(_objId.value);">Register Object
       </button>
     </div>
 
