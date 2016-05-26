@@ -344,6 +344,7 @@ function rentObject(objId) {
       else {
         setStatus("Renting object not possible. Please try again.");
       }
+      switchPageView(objId);
     }).catch(function (e) {
       console.log(e);
       setStatus("Error renting object; see log.");
