@@ -53,7 +53,7 @@
         if (_objId != undefined) {
           objectId = _objId;
           objIdElement.value = _objId;
-          switchPageView(_objId);
+          switchPageView();
         }
       });
     }
@@ -101,7 +101,7 @@
     <p>You have <span class="black"><span id="balance"></span> Ether</span></p>
     <span id="status"></span><br>
 
-    <button id="toggleAccounts" onclick="toggleAccounts();switchPageView(_objId.value)">Toggle Accounts</button>
+    <button id="toggleAccounts" onclick="toggleAccounts();">Toggle Accounts</button>
   </div>
 </article>
 
@@ -135,33 +135,15 @@
 
 <article id="contextmenu" class="container box style1">
   <div class="inner">
-    <!-- Context placeholder -->
-    <div id="contextPlaceholder" style="display: none;">
-      You have not selected a tool yet.
+    <!-- Page with owner info -->
+    <div id="ownersPage" style="display: none;">
+      <header><h2>Information</h2></header>
+      <p>You have registered this tool.</p>
     </div>
 
-    <!-- Page with object information -->
-    <div id="objectInformation" style="display:none;">
-      <header><h2>Reclaim Object</h2></header>
-      <p>Return this object now.</p>
-      <!--<h4>Object ID is: <span class="black"><span id="objId"></span></span></h4>
-      <h4>This device is <span class="black"><span id="registered"></span></span>registered.</h4>
-      <h4>This device is <span class="black"><span id="rented"></span></span>rented.</h4>
-      <h4>Price: <span class="black"><span id="price"></span> Ether</span></h4>
-      <h4><span class="black"><span id="description"></span></span></h4> -->
-      <button id="reclaimObject" onclick="reclaimObject();switchPageView(_objId.value);">Reclaim Object</button>
-    </div>
-
-    <!-- Page to show information for the current renter -->
-    <div id="rentOverview" style="display:none;">
-      <header><h2>Rental Overview</h2></header>
-      <h4>You have rented the device <span class="black"><span id="clientObject"></span></span> for <span class="black"><span
-          id="clientTime"></span></span> seconds.</h4>
-    </div>
-
-    <!-- Page with renting information -->
-    <div id="rentingPage" style="display:none;">
-      <header><h2></h2></header>
+    <!-- Object info -->
+    <div id="objectInformation" style="display: none;">
+      <header><h2>Object details</h2></header>
       <table style="text-align: left; margin-top: 20px">
         <tr>
           <td>Description:</td>
@@ -188,7 +170,32 @@
           <td><span class="black"><span id="deposit"></span> Ether</span></td>
         </tr>
       </table>
+    </div>
 
+    <!-- Page with object information -->
+    <div id="reclaimPage" style="display:none;">
+      <header><h2>Reclaim Object</h2></header>
+      <p>Take back the rented device and refund the deposit (minus rent).</p>
+      <!--<h4>Object ID is: <span class="black"><span id="objId"></span></span></h4>
+      <h4>This device is <span class="black"><span id="registered"></span></span>registered.</h4>
+      <h4>This device is <span class="black"><span id="rented"></span></span>rented.</h4>
+      <h4>Price: <span class="black"><span id="price"></span> Ether</span></h4>
+      <h4><span class="black"><span id="description"></span></span></h4> -->
+      <button id="reclaimObject" onclick="reclaimObject();switchPageView();">Reclaim Object</button>
+    </div>
+
+    <!-- Page to show information for the current renter -->
+    <div id="rentOverview" style="display:none;">
+      <header><h2>Rental Overview</h2></header>
+      <h4>You have rented the device <span class="black"><span id="clientObject"></span></span> for <span class="black"><span
+          id="clientTime"></span></span> seconds.</h4>
+    </div>
+
+    <!-- Page with renting information -->
+    <div id="rentingPage" style="display:none;">
+      <header><h2>Information</h2></header>
+
+      <p>By renting this object you agree to the <em>Terms and Conditions</em>.</p>
       <button id="rentObject" onclick="rentObject();">Rent Object</button>
     </div>
 
@@ -213,7 +220,7 @@
           <td><input type="number" id="_deposit" placeholder="e.g., 95"></td>
         </tr>
       </table>
-      <button id="register" onclick="registerObject(_objId.value);switchPageView(_objId.value);">Register Object
+      <button id="register" onclick="registerObject();switchPageView();">Register Object
       </button>
     </div>
 
@@ -243,7 +250,7 @@
 </section>
 
 <!-- Scripts -->
-<script src="https://webrtc.github.io/adapter/adapter-latest.js"></script>
+<!-- <script src="https://webrtc.github.io/adapter/adapter-latest.js"></script> -->
 <script type="text/javascript" src="./js/qrcode-reader.js"></script>
 <script type="text/javascript" src="./js/qrcode-init.js"></script>
 

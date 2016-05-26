@@ -6,8 +6,8 @@
   <link href="./app.css" rel='stylesheet' type='text/css'>
   <script src="./app.js"></script>
   <script>
-    window.onload = function() {
-      web3.eth.getAccounts(function(err, accs) {
+    window.onload = function () {
+      web3.eth.getAccounts(function (err, accs) {
         if (err != null) {
           alert("There was an error fetching your accounts.");
           return;
@@ -27,42 +27,48 @@
         var objId = get('objId');
         if (objId != undefined) {
           objIdElement.value = objId;
-          refreshStatus(objIdElement.value);
+          objectId = objId;
+          refreshStatus();
         }
       });
     }
   </script>
 </head>
 <body>
-  <button id="toggleAccounts" onclick="toggleAccounts()">Toggle Accounts</button>
-  <br>
-  <h1>Rentable Objects</h1>
-  <h2>Register or unregister your object here.</h2>
-  <br>
-  <br><label for="_objId">Object Id:</label><input type="text" id="_objId" placeholder="0x93e66d9" onchange="refreshStatus(this.value);"></input>
-  <div id="objStatus">
-    <h3>Object ID is: <span class="black"><span id="objId"></span></span></h3>
-    <h3>This device is <span class="black"><span id="registered"></span></span>registered.</h3>
-    <h3>This device is <span class="black"><span id="rented"></span></span>rented.</h3>
-  </div>
-  <h3>Your address is <span class="black"><span id="address"></span></span></h3>
-  <div id="registerPage" style="display:none;">
-    <h1>Register this device:</h1>
-    <br><label for="_price">Price:</label><input type="number" id="_price" placeholder="e.g., 95"></input>
-    <br><label for="_amortizationPeriod">Amortization period:</label><input type="number" id="_amortizationPeriod" placeholder="4 weeks"></input>
-    <br><label for="_description">Object description:</label><input type="text" id="_description" placeholder="Bosch Bohrmaschine..."></input>
-    <br><br><button id="register" onclick="registerObject(_objId.value)">Register Object</button>
-  </div>
-  <div id="unregisterPage" style="display:none;">
-    <h1>Unregister this device:</h1>
-    <br><br><button id="register" onclick="unregisterObject(_objId.value)">Unregister Object</button>
-  </div>
+<button id="toggleAccounts" onclick="toggleAccounts()">Toggle Accounts</button>
+<br>
+<h1>Rentable Objects</h1>
+<h2>Register or unregister your object here.</h2>
+<br>
+<br><label for="_objId">Object Id:</label><input type="text" id="_objId" placeholder="0x93e66d9"
+                                                 onchange="refreshStatus();">
+<div id="objStatus">
+  <h3>Object ID is: <span class="black"><span id="objId"></span></span></h3>
+  <h3>This device is <span class="black"><span id="registered"></span></span>registered.</h3>
+  <h3>This device is <span class="black"><span id="rented"></span></span>rented.</h3>
+</div>
+<h3>Your address is <span class="black"><span id="address"></span></span></h3>
+<div id="registerPage" style="display:none;">
+  <h1>Register this device:</h1>
+  <br><label for="_price">Price:</label><input type="number" id="_price" placeholder="e.g., 95">
+  <br><label for="_amortizationPeriod">Amortization period:</label><input type="number" id="_amortizationPeriod"
+                                                                          placeholder="4 weeks">
+  <br><label for="_description">Object description:</label><input type="text" id="_description"
+                                                                  placeholder="Bosch Bohrmaschine...">
   <br><br>
-  <span id="status"></span>
+  <button id="register" onclick="registerObject()">Register Object</button>
+</div>
+<div id="unregisterPage" style="display:none;">
+  <h1>Unregister this device:</h1>
+  <br><br>
+  <button id="unRegister" onclick="unregisterObject()">Unregister Object</button>
+</div>
+<br><br>
+<span id="status"></span>
 
-  <div id="loadingDiv" style="display:none">
-    <img src="./images/colorful_loading.gif">
-  </div>
+<div id="loadingDiv" style="display:none">
+  <img src="./images/colorful_loading.gif">
+</div>
 
 </body>
 </html>

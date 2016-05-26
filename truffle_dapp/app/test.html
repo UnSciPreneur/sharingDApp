@@ -24,6 +24,10 @@
         refreshBalance();
         
         var objIdElement = document.getElementById("_objId");
+        if ( objIdElement !== null) {
+          objectId = objIdElement.value;
+        }
+
         var objId = get('objId');
         if (objId != undefined) {
           objIdElement.value = objId;
@@ -31,17 +35,17 @@
           refreshStatus();
           refreshDetails();
 
-          switchPageView(objId);
+          switchPageView();
         }
       });
     }
   </script>
 </head>
 <body>
-  <button id="toggleAccounts" onclick="toggleAccounts();switchPageView(_objId.value);">Toggle Accounts</button>
+  <button id="toggleAccounts" onclick="toggleAccounts();switchPageView();">Toggle Accounts</button>
   <h4><span class="black"><span id="address"></span></span></h4>
   <h2>Select an object to rent</h2>
-  <br><label for="_objId">Object Id:</label><input type="text" id="_objId" placeholder="0x93e66d9" onchange="refreshStatus(this.value);refreshDetails(this.value);switchPageView(this.value);">
+  <br><label for="_objId">Object Id:</label><input type="text" id="_objId" placeholder="0x93e66d9" onchange="refreshStatus();refreshDetails();switchPageView();">
   <h3>You have <span class="black"><span id="balance"></span> Ether</span></h3>
   <span id="status"></span><br>
 
@@ -66,12 +70,12 @@
   <div id="rentOverview" style="display:none;">
     <h3>Rental Overview</h3><br>
     <h4>You have rented this device for <span class="black"><span id="clientTime"></span></span> seconds.</h4>
-    <br><br><button id="returnObject" onclick="reclaimObject();switchPageView(_objId.value);">Return Object</button>
+    <br><br><button id="returnObject" onclick="reclaimObject();switchPageView();">Return Object</button>
   </div>
 
 <!-- Page with renting information -->
   <div id="rentingPage" style="display:none;">
-    <br><br><button id="rentObject" onclick="rentObject(_objId.value);switchPageView(_objId.value);">Rent Object</button>
+    <br><br><button id="rentObject" onclick="rentObject();switchPageView();">Rent Object</button>
   </div>
 
 <!-- Page to register a new object -->

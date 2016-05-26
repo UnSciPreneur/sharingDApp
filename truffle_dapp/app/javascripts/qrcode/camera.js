@@ -47,7 +47,7 @@ var camera = (function (p_vid_id, p_inter, p_scale) {
         // we are assuming 5-digit all numeric ids for simplicity
         objectId = parseInt(result.substr(-5));
         _objId.value = objectId;
-        switchPageView(objectId);
+        switchPageView();
 
         //ToDo: make this scroll smoothly
         location.hash = "#contextmenu";
