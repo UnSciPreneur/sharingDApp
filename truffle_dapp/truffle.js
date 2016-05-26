@@ -36,6 +36,7 @@ module.exports = {
     "app.css": [
       "stylesheets/app.css"
     ],
+    "test.css": "stylesheets/test.css",
     "images/": "images/",
     "assets/css/": "assets/css/",
     "assets/fonts/": "assets/fonts/",

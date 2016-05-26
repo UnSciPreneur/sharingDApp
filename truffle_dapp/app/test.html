@@ -3,7 +3,7 @@
 <head>
   <title>Bosch Rentable Objects</title>
   <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
-  <link href="./app.css" rel='stylesheet' type='text/css'>
+  <link href="./test.css" rel='stylesheet' type='text/css'>
   <script src="./app.js"></script>
   <script>
     window.onload = function() {
@@ -40,7 +40,7 @@
   <button id="toggleAccounts" onclick="toggleAccounts();switchPageView(_objId.value);">Toggle Accounts</button>
   <h4><span class="black"><span id="address"></span></span></h4>
   <h2>Select an object to rent</h2>
-  <br><label for="_objId">Object Id:</label><input type="text" id="_objId" placeholder="0x93e66d9" onchange="refreshStatus(this.value);refreshDetails(this.value);switchPageView(this.value);"></input>
+  <br><label for="_objId">Object Id:</label><input type="text" id="_objId" placeholder="0x93e66d9" onchange="refreshStatus(this.value);refreshDetails(this.value);switchPageView(this.value);">
   <h3>You have <span class="black"><span id="balance"></span> Ether</span></h3>
   <span id="status"></span><br>
 
@@ -59,28 +59,26 @@
     <h4>Price per day: <span class="black"><span id="pricePerDay"></span> Ether</span></h4>
     <h4>Deposit: <span class="black"><span id="deposit"></span> Ether</span></h4>
     <h4><span class="black"><span id="description"></span></span></h4>
-    <h4>Contact info: <span class="black"><span id="contactInfo"></span></span></h4>
   </div>
 
 <!-- Page to show information for the current renter -->
   <div id="rentOverview" style="display:none;">
     <h3>Rental Overview</h3><br>
     <h4>You have rented this device for <span class="black"><span id="clientTime"></span></span> seconds.</h4>
-    <br><br><button id="rentObject" onclick="returnObject(_objId.value);switchPageView(_objId.value);">Return Object</button>
+    <br><br><button id="returnObject" onclick="returnObject(_objId.value);switchPageView(_objId.value);">Return Object</button>
   </div>
 
 <!-- Page with renting information -->
   <div id="rentingPage" style="display:none;">
-    <br><label for="_contactInfo">Your contact info:</label><input type="text" id="_contactInfo" placeholder="Telephone number, address etc. ..."></input>
     <br><br><button id="rentObject" onclick="rentObject(_objId.value);switchPageView(_objId.value);">Rent Object</button>
   </div>
 
 <!-- Page to register a new object -->
   <div id="registerPage" style="display:none;">
     <h1>Register this device:</h1>
-    <br><label for="_deposit">Deposit:</label><input type="number" id="_deposit" placeholder="e.g., 95"></input>
-    <br><label for="_pricePerDay">Price per day:</label><input type="number" id="_pricePerDay" placeholder="5"></input>
-    <br><label for="_description">Object description:</label><input type="text" id="_description" placeholder="Bosch Bohrmaschine..."></input>
+    <br><label for="_deposit">Deposit:</label><input type="number" id="_deposit" placeholder="e.g., 95">
+    <br><label for="_pricePerDay">Price per day:</label><input type="number" id="_pricePerDay" placeholder="5">
+    <br><label for="_description">Object description:</label><input type="text" id="_description" placeholder="Bosch Bohrmaschine...">
     <br><br><button id="register" onclick="registerObject(_objId.value);switchPageView(_objId.value);">Register Object</button>
   </div>
 

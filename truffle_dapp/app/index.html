@@ -16,7 +16,7 @@
   <link rel="stylesheet" href="assets/css/ie8.css"/><![endif]-->
   <script type="text/javascript" src="./js/jquery.min.js"></script>
   <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
-  <!-- <link href="./app.css" rel='stylesheet' type='text/css'> -->
+  <link href="./app.css" rel='stylesheet' type='text/css'>
   <script src="./app.js"></script>
   <script>
     window.onload = function () {
@@ -134,14 +134,18 @@
   <div class="inner">
     <header><h2>Context menu</h2></header>
 
+    <!-- Context placeholder -->
+    <div id="contextPlaceholder" style="display: none;">
+      You have not selected a tool yet.
+    </div>
+
     <!-- Page with object information -->
     <div id="objectInformation" style="display:none;">
       <!-- <h4>Object ID is: <span class="black"><span id="objId"></span></span></h4>
       <h4>This device is <span class="black"><span id="registered"></span></span>registered.</h4>
       <h4>This device is <span class="black"><span id="rented"></span></span>rented.</h4>
       <h4>Price: <span class="black"><span id="price"></span> Ether</span></h4>
-      <h4><span class="black"><span id="description"></span></span></h4>
-      <h4>Contact info: <span class="black"><span id="contactInfo"></span></span></h4> -->
+      <h4><span class="black"><span id="description"></span></span></h4> -->
     </div>
 
     <!-- Page to show information for the current renter -->
@@ -177,12 +181,8 @@
           <td><span class="black"><span id="deposit"></span> Ether</span></td>
         </tr>
         <tr>
-          <td></td>
+          <td>Description:</td>
           <td><span class="black"><span id="description"></span></span></td>
-        </tr>
-        <tr>
-          <td>Client contact info:</td>
-          <td><span class="black"><span id="contactInfo"></span></span></td>
         </tr>
       </table>
 

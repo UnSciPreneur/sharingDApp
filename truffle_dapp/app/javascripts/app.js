@@ -155,9 +155,7 @@ function objectIsRented(objId, callBack) {
 
 function getObjectDeposit(objId, callBack) {
   var rentable = RentableObjects.deployed();
-  console.log("getObjectDeposit:", objId);
   rentable.getObjectDeposit.call(objId, {from: account}).then(function (value) {
-    console.log("Got deposit:", parseInt(value));
     callBack(value);
   }).catch(function (e) {
     console.log(e);
@@ -267,20 +265,9 @@ function refreshDetails(objId) {
     pricePerDayElement.innerHTML = pricePerDay.toFixed(4);
   });
 
-  getObjectDeposit(objId, function (value) {
-    var depositElement = document.getElementById("deposit");
-    var deposit = parseInt(value) * wei;
-    depositElement.innerHTML = deposit.toFixed(4);
-  });
-
   getObjectDescription(objId, function (value) {
     var descriptionElement = document.getElementById("description");
     descriptionElement.innerHTML = value;
-  });
-
-  getObjectClientContactInfo(objId, function (value) {
-    var contactInfoElement = document.getElementById("contactInfo");
-    contactInfoElement.innerHTML = value;
   });
 
   getObjectClientTime(objId, function (value) {
@@ -346,13 +333,11 @@ function unregisterObject(objId) {
 
 function rentObject(objId) {
   setStatus("Renting object... (please wait)");
-  console.log("Getting deposit of objId:", objId);
   getObjectDeposit(objId, function (deposit) {
     var rentable = RentableObjects.deployed();
-    var contactInfo = document.getElementById("_contactInfo").value;
     console.log("Renting objId:", objId);
 
-    rentable.rentObject(objId, contactInfo, {from: account, value: deposit, gas: 1000000}).then(function(success) {
+    rentable.rentObject(objId, {from: account, value: deposit, gas: 1000000}).then(function(success) {
       if (success) {
         setStatus("Object successfully rented.");
       }
