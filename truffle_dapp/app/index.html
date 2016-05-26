@@ -37,18 +37,19 @@
         var accNum = parseInt(get('accNum'));
         console.log(accNum);
         if ( (accNum == 0) || (accNum == 1) || (accNum == 2) ) {
-          console.log("Switching to Account:", accNum);
+          console.log("Switching to Account: ", accNum);
           account = accounts[accNum];
         }
         else {
           account = accounts[0];
         }
 
-        refreshBalance(account);
+        refreshBalance();
 
         var objIdElement = document.getElementById("_objId");
         var _objId = get('objId');
         if (_objId != undefined) {
+          objectId = _objId;
           objIdElement.value = _objId;
           switchPageView(_objId);
         }
@@ -151,10 +152,7 @@
     <!-- Page to show information for the current renter -->
     <div id="rentOverview" style="display:none;">
       <h3>Rental Overview</h3><br>
-      <h4>You have rented this device for <span class="black"><span id="clientTime"></span></span> seconds.</h4>
-      <br><br>
-      <button id="returnObject" onclick="returnObject(_objId.value);switchPageView(_objId.value);">Return Object
-      </button>
+      <h4>You have rented the device <span class="black"><span id="clientObject"></span></span> for <span class="black"><span id="clientTime"></span></span> seconds.</h4>
     </div>
 
     <!-- Page with renting information -->

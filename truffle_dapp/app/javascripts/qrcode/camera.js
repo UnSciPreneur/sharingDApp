@@ -45,9 +45,9 @@ var camera = (function (p_vid_id, p_inter, p_scale) {
         deactivateCam();
         // select the object for registration/renting/return/...
         // we are assuming 5-digit all numeric ids for simplicity
-        var objId = parseInt(result.substr(-5));
-        _objId.value = objId;
-        switchPageView(objId);
+        objectId = parseInt(result.substr(-5));
+        _objId.value = objectId;
+        switchPageView(objectId);
 
         //ToDo: make this scroll smoothly
         location.hash = "#contextmenu";
