@@ -155,9 +155,10 @@ function objectIsRented(objId, callBack) {
 
 function getObjectDeposit(objId, callBack) {
   var rentable = RentableObjects.deployed();
-
+  console.log("getObjectDeposit:", objId);
   rentable.getObjectDeposit.call(objId, {from: account}).then(function (value) {
-    callBack(parseInt(value));
+    console.log("Got deposit:", parseInt(value));
+    callBack(value);
   }).catch(function (e) {
     console.log(e);
     setStatus("Error executing getObjectDeposit()");
@@ -345,10 +346,11 @@ function unregisterObject(objId) {
 
 function rentObject(objId) {
   setStatus("Renting object... (please wait)");
-
+  console.log("Getting deposit of objId:", objId);
   getObjectDeposit(objId, function (deposit) {
     var rentable = RentableObjects.deployed();
     var contactInfo = document.getElementById("_contactInfo").value;
+    console.log("Renting objId:", objId);
 
     rentable.rentObject(objId, contactInfo, {from: account, value: deposit, gas: 1000000}).then(function(success) {
       if (success) {
