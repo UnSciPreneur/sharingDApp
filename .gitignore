@@ -2,3 +2,4 @@
 *.iml
 truffle_dapp/environments/
 truffle_dapp/node_modules/*
+.DS_Store
