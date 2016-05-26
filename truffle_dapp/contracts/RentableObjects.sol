@@ -20,10 +20,11 @@ contract RentableObjects {
 
   // Public index to reference objects
   mapping (uint => Object) objects;
+  address owner;
 
   // Constructor
   function RentableObjects() {
-
+    owner = msg.sender;
   }
 
   function registerObject(uint _objId, uint _deposit, uint _pricePerDay, string _descr) returns (bool) {
@@ -123,6 +124,13 @@ contract RentableObjects {
     return objects[_objId].client.cliAddress;
   }
 
+  function getObjectOwnerAddress(uint _objId) returns (address) {
+    return objects[_objId].owner;
+  }
+
+  function getContractOwnerAddress() returns (address) {
+    return owner;
+  }
 
   // Fallback function results in nothing
   function () {

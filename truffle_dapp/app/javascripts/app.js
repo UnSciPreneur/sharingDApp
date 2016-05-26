@@ -11,6 +11,17 @@ var blockCreator = setInterval(function () {
   web3.eth.sendTransaction({from: accounts[2], to: accounts[2], value: 5});
 }, 30000);
 
+function initState() {
+  var rentable = RentableObjects.deployed();
+
+  rentable.getContractOwnerAddress.call({from: account}).then(function (value) {
+    contractOwner = value;
+  }).catch(function (e) {
+    console.log(e);
+    setStatus("Error executing getContractOwnerAddress()");
+  });
+}
+
 function switchPageView(objId) {
   refreshStatus();
   refreshDetails();
@@ -25,7 +36,7 @@ function switchPageView(objId) {
           getObjectClientAddress(objId, function (clientAddress) {
             if (clientAddress == account) {
               // account is client -> show rentOverview
-              document.getElementById("objectInformation").style.display = "inline";
+              document.getElementById("objectInformation").style.display = "none";
               document.getElementById("rentOverview").style.display = "inline";
               document.getElementById("rentingPage").style.display = "none";
               document.getElementById("registerPage").style.display = "none";
@@ -33,6 +44,7 @@ function switchPageView(objId) {
             }
             else {
               // -> show objectInformation
+              console.log("Account owns this (rented) object.");
               document.getElementById("objectInformation").style.display = "inline";
               document.getElementById("rentOverview").style.display = "none";
               document.getElementById("rentingPage").style.display = "none";
@@ -53,11 +65,7 @@ function switchPageView(objId) {
     }
     else {
       // object is unregistered
-
-      // ToDo: make this work
-      var rentable = RentableObjects.deployed();
-      //if (account == rentable.creator) {
-      if (true) {
+      if (account == contractOwner) {
         // account is contract owner -> show register screen
         document.getElementById("objectInformation").style.display = "none";
         document.getElementById("rentOverview").style.display = "none";
@@ -97,6 +105,7 @@ function toggleAccounts() {
   var addressElement = document.getElementById("address");
   addressElement.innerHTML = account;
   refreshBalance();
+  switchPageView(objectId);
 }
 
 function setStatus(message) {
@@ -345,20 +354,20 @@ function unregisterObject() {
   });
 }
 
-function rentObject(objId) {
+function rentObject() {
   setStatus("Renting object... (please wait)");
   getObjectDeposit(objId, function (deposit) {
     var rentable = RentableObjects.deployed();
     console.log("Renting objId:", objId);
 
-    rentable.rentObject(objId, {from: account, value: deposit, gas: 1000000}).then(function (success) {
+    rentable.rentObject(objectId, {from: account, value: deposit, gas: 1000000}).then(function (success) {
       if (success) {
         setStatus("Object successfully rented.");
       }
       else {
         setStatus("Renting object not possible. Please try again.");
       }
-      switchPageView(objId);
+      switchPageView(objectId);
     }).catch(function (e) {
       console.log(e);
       setStatus("Error renting object; see log.");
@@ -366,12 +375,12 @@ function rentObject(objId) {
   });
 }
 
-function returnObject(objId) {
+function reclaimObject() {
   setStatus("Returning object... (please wait)");
 
   var rentable = RentableObjects.deployed();
 
-  rentable.returnObject(objId, {from: account, gas: 1000000}).then(function (success) {
+  rentable.returnObject(objectId, {from: account, gas: 1000000}).then(function (success) {
     if (success) {
       console.log("Object successfully returned.");
       setStatus("Object successfully returned.");
@@ -381,7 +390,7 @@ function returnObject(objId) {
       setStatus("Returning object not possible. Please try again.");
     }
 
-    switchPageView(objId);
+    switchPageView(objectId);
   }).catch(function (e) {
     console.log(e);
     setStatus("Error returning object; see log.");

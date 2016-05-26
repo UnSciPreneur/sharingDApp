@@ -32,11 +32,13 @@
           return;
         }
 
+        initState();
+
         accounts = accs;
 
         var accNum = parseInt(get('accNum'));
         console.log(accNum);
-        if ( (accNum == 0) || (accNum == 1) || (accNum == 2) ) {
+        if ((accNum == 0) || (accNum == 1) || (accNum == 2)) {
           console.log("Switching to Account: ", accNum);
           account = accounts[accNum];
         }
@@ -96,7 +98,7 @@
     <header><h2>Your account</h2></header>
     <h4><span class="black"><span id="address"></span></span></h4>
 
-    <h3>You have <span class="black"><span id="balance"></span> Ether</span></h3>
+    <p>You have <span class="black"><span id="balance"></span> Ether</span></p>
     <span id="status"></span><br>
 
     <button id="toggleAccounts" onclick="toggleAccounts();switchPageView(_objId.value)">Toggle Accounts</button>
@@ -133,8 +135,6 @@
 
 <article id="contextmenu" class="container box style1">
   <div class="inner">
-    <header><h2>Context menu</h2></header>
-
     <!-- Context placeholder -->
     <div id="contextPlaceholder" style="display: none;">
       You have not selected a tool yet.
@@ -142,27 +142,36 @@
 
     <!-- Page with object information -->
     <div id="objectInformation" style="display:none;">
-      <!-- <h4>Object ID is: <span class="black"><span id="objId"></span></span></h4>
+      <header><h2>Reclaim Object</h2></header>
+      <p>Return this object now.</p>
+      <!--<h4>Object ID is: <span class="black"><span id="objId"></span></span></h4>
       <h4>This device is <span class="black"><span id="registered"></span></span>registered.</h4>
       <h4>This device is <span class="black"><span id="rented"></span></span>rented.</h4>
       <h4>Price: <span class="black"><span id="price"></span> Ether</span></h4>
       <h4><span class="black"><span id="description"></span></span></h4> -->
+      <button id="reclaimObject" onclick="reclaimObject();switchPageView(_objId.value);">Reclaim Object</button>
     </div>
 
     <!-- Page to show information for the current renter -->
     <div id="rentOverview" style="display:none;">
-      <h3>Rental Overview</h3><br>
-      <h4>You have rented the device <span class="black"><span id="clientObject"></span></span> for <span class="black"><span id="clientTime"></span></span> seconds.</h4>
+      <header><h2>Rental Overview</h2></header>
+      <h4>You have rented the device <span class="black"><span id="clientObject"></span></span> for <span class="black"><span
+          id="clientTime"></span></span> seconds.</h4>
     </div>
 
     <!-- Page with renting information -->
     <div id="rentingPage" style="display:none;">
+      <header><h2></h2></header>
       <table style="text-align: left; margin-top: 20px">
+        <tr>
+          <td>Description:</td>
+          <td><span class="black"><span id="description"></span></span></td>
+        </tr>
         <tr>
           <td>Object ID is:</td>
           <td><span class="black"><span id="objId"></span></span></td>
         </tr>
-        <tr>
+        <tr style="display: none">
           <td>This device is</td>
           <td><span class="black"><span id="registered"></span></span>registered.</td>
         </tr>
@@ -178,13 +187,9 @@
           <td>Deposit:</td>
           <td><span class="black"><span id="deposit"></span> Ether</span></td>
         </tr>
-        <tr>
-          <td>Description:</td>
-          <td><span class="black"><span id="description"></span></span></td>
-        </tr>
       </table>
 
-      <button id="rentObject" onclick="rentObject(_objId.value);">Rent Object</button>
+      <button id="rentObject" onclick="rentObject();">Rent Object</button>
     </div>
 
     <!-- Page to register a new object -->
@@ -212,11 +217,10 @@
       </button>
     </div>
 
-
     <!-- 404 Object not found page -->
     <div id="notFoundPage" style="display:none;">
-      Object not found<br>
-      We are sorry to tell that we could not find the object you are looking for...
+      <h1>Object not found</h1>
+      <p>We are sorry to tell that we could not find the object you are looking for.</p>
     </div>
   </div>
 </article>
