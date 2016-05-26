@@ -1,6 +1,7 @@
 module.exports = {
   build: {
     "index.html": "index.html",
+    "test.html": "test.html",
     "objectIndex.html": "objectIndex.html",
     "js/qrcode-reader.js": [
       "../node_modules/qrcode-reader/src/grid.js",

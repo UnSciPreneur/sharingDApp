@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Bosch Rentable Objects</title>
+  <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+  <link href="./app.css" rel='stylesheet' type='text/css'>
+  <script src="./app.js"></script>
+  <script>
+    window.onload = function() {
+      web3.eth.getAccounts(function(err, accs) {
+        if (err != null) {
+          alert("There was an error fetching your accounts.");
+          console.log(err, accs);
+          return;
+        }
+
+        if (accs.length == 0) {
+          alert("Couldn't get any accounts! Make sure your Ethereum client is configured correctly.");
+          return;
+        }
+
+        accounts = accs;
+        account = accounts[0];
+        refreshBalance(account);
+        
+        var objIdElement = document.getElementById("_objId");
+        var objId = get('objId');
+        if (objId != undefined) {
+          objIdElement.value = objId;
+          refreshStatus(objIdElement.value);
+          refreshDetails(objIdElement.value);
+
+          switchPageView(objId);
+        }
+      });
+    }
+  </script>
+</head>
+<body>
+  <button id="toggleAccounts" onclick="toggleAccounts();switchPageView(_objId.value);">Toggle Accounts</button>
+  <h4><span class="black"><span id="address"></span></span></h4>
+  <h2>Select an object to rent</h2>
+  <br><label for="_objId">Object Id:</label><input type="text" id="_objId" placeholder="0x93e66d9" onchange="refreshStatus(this.value);refreshDetails(this.value);switchPageView(this.value);"></input>
+  <h3>You have <span class="black"><span id="balance"></span> Ether</span></h3>
+  <span id="status"></span><br>
+
+<div id="loadingDiv" style="display:none">
+  <img src="./images/colorful_loading.gif">
+</div>
+
+
+<!-- Beginning of pages switching in switchPageView -->
+
+<!-- Page with object information -->
+  <div id="objectInformation" style="display:none;">
+    <h4>Object ID is: <span class="black"><span id="objId"></span></span></h4>
+    <h4>This device is <span class="black"><span id="registered"></span></span>registered.</h4>
+    <h4>This device is <span class="black"><span id="rented"></span></span>rented.</h4>
+    <h4>Price per day: <span class="black"><span id="pricePerDay"></span> Ether</span></h4>
+    <h4>Deposit: <span class="black"><span id="deposit"></span> Ether</span></h4>
+    <h4><span class="black"><span id="description"></span></span></h4>
+    <h4>Contact info: <span class="black"><span id="contactInfo"></span></span></h4>
+  </div>
+
+<!-- Page to show information for the current renter -->
+  <div id="rentOverview" style="display:none;">
+    <h3>Rental Overview</h3><br>
+    <h4>You have rented this device for <span class="black"><span id="clientTime"></span></span> seconds.</h4>
+    <br><br><button id="rentObject" onclick="returnObject(_objId.value);switchPageView(_objId.value);">Return Object</button>
+  </div>
+
+<!-- Page with renting information -->
+  <div id="rentingPage" style="display:none;">
+    <br><label for="_contactInfo">Your contact info:</label><input type="text" id="_contactInfo" placeholder="Telephone number, address etc. ..."></input>
+    <br><br><button id="rentObject" onclick="rentObject(_objId.value);switchPageView(_objId.value);">Rent Object</button>
+  </div>
+
+<!-- Page to register a new object -->
+  <div id="registerPage" style="display:none;">
+    <h1>Register this device:</h1>
+    <br><label for="_deposit">Deposit:</label><input type="number" id="_deposit" placeholder="e.g., 95"></input>
+    <br><label for="_pricePerDay">Price per day:</label><input type="number" id="_pricePerDay" placeholder="5"></input>
+    <br><label for="_description">Object description:</label><input type="text" id="_description" placeholder="Bosch Bohrmaschine..."></input>
+    <br><br><button id="register" onclick="registerObject(_objId.value);switchPageView(_objId.value);">Register Object</button>
+  </div>
+
+<!-- 404 Object not found page -->
+  <div id="notFoundPage" style="display:none;">
+    Object not found<br>
+    We are sorry to tell that we could not find the object you are looking for...
+  </div>
+
+</body>
+</html>
