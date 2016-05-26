@@ -9,12 +9,13 @@ contract RentableObjects {
 
   // Every rentable object has the following properties
   struct Object {
-    uint price;
-    string description;
     uint objId;
+    string description;
+    uint deposit;
+    uint pricePerDay;
     Client client;
     uint created;
-    uint amortizationPeriod;
+    address owner;
     bool exists;
   }
 
@@ -26,14 +27,10 @@ contract RentableObjects {
 
   }
 
-  function objectIsRegistered(uint _objId) returns (bool) {
-    return objects[_objId].exists;
-  }
-
-  function addObject(uint _objId, uint _price, string _descr) returns (bool) {
+  function registerObject(uint _objId, uint _deposit, uint _pricePerDay, string _descr) returns (bool) {
     if (objectIsRegistered(_objId) == false) {
       Client memory nilClient = Client({cliAddress: 0, contactInfo: "", since: 0, exists: false});
-      objects[_objId] = Object({price: _price, description: _descr, objId: _objId, client: nilClient, created: now, amortizationPeriod: 4 days, exists: true});
+      objects[_objId] = Object({objId: _objId, description: _descr, deposit: _deposit, pricePerDay: _pricePerDay, client: nilClient, created: now, owner: msg.sender, exists: true});
       return true;
     }
     else {
@@ -41,16 +38,7 @@ contract RentableObjects {
     }
   }
 
-  function objectIsRented(uint _objId) returns (bool) {
-    if ( (objects[_objId].exists == true) && (objects[_objId].client.exists == true) ) {
-      return true;
-    }
-    else {
-      return false;
-    }
-  }
-
-  function removeObject(uint _objId) returns (bool) {
+  function unregisterObject(uint _objId) returns (bool) {
     if ( (objects[_objId].exists == true) && (objectIsRented(_objId) == false) ) {
       delete objects[_objId];
       return true;
@@ -61,34 +49,13 @@ contract RentableObjects {
     }
   }
 
-  function getObjectPrice(uint _objId) returns(uint) {
-    // TODO: SOMETHING WRONG WITH CALCULATION!
-    /* example for linear degression of price
-      |------
-      |      --|---
-      |________|___------______|
-      |        |               |
-  [created]  [now]     [created+amortizationPeriod]
-      calculated by:
-      objPrice = price * ( 1 - ( (now - created) / amortizationPeriod ) )
-    */
-    uint subtrahend = ( (1000 * (now - objects[_objId].created)) / objects[_objId].amortizationPeriod );
-    if (subtrahend > 1000) {
-      return 0;
-    }
-    else {
-      uint _price = ( objects[_objId].price * (1000 - subtrahend) ) / 1000;
-      return _price;
-    }
-  }
-
   function rentObject(uint _objId, string _contactInfo) returns (bool) {
     // if ( (objectIsRented(_objId) == false) && (msg.value >= getObjectPrice(_objId)) ) {
-    if (msg.value >= getObjectPrice(_objId)) {
+    if (msg.value >= objects[_objId].deposit) {
       // add client to object
       objects[_objId].client = Client({cliAddress: msg.sender, contactInfo: _contactInfo, since: now, exists: true});
       // send back any excess ether
-      objects[_objId].client.cliAddress.send(msg.value - getObjectPrice(_objId));
+      objects[_objId].client.cliAddress.send(msg.value - objects[_objId].deposit);
       // send confirmation to object
       //objects[_objId].objId.call.value(0)(objects[_objId].client.cliAddress);
       return true;
@@ -102,7 +69,7 @@ contract RentableObjects {
   function returnObject(uint _objId) returns (bool) {
     if ( (objectIsRented(_objId) == true) && (msg.sender == getObjectClientAddress(_objId)) ) {
       objects[_objId].client = Client({cliAddress: 0, contactInfo: "", since: 0, exists: false});
-      msg.sender.send(getObjectPrice(_objId));
+      msg.sender.send(getReturnDeposit(_objId, getObjectClientTime(_objId)));
        return true;
     }
     else {
@@ -110,13 +77,38 @@ contract RentableObjects {
       return false;
     }
   }
-  
-  function getObjectClientAddress(uint _objId) returns (address) {
-    return objects[_objId].client.cliAddress;
+
+  function objectIsRegistered(uint _objId) returns (bool) {
+    return objects[_objId].exists;
   }
 
-  function getObjectClientContactInfo(uint _objId) returns (string) {
-    return objects[_objId].client.contactInfo;
+  function objectIsRented(uint _objId) returns (bool) {
+    if ( (objects[_objId].exists == true) && (objects[_objId].client.exists == true) ) {
+      return true;
+    }
+    else {
+      return false;
+    }
+  }
+
+  function getReturnDeposit(uint _objId, uint _clientTime) returns (uint) {
+    uint day = 86400;
+    uint daysRented = ( _clientTime - 1) / day + 1;
+    uint rentalCost = daysRented * objects[_objId].pricePerDay;
+    uint returnDeposit = objects[_objId].deposit - rentalCost;
+    return returnDeposit;
+  }
+
+  function getNow() returns (uint) {
+    return now;
+  }
+
+  function getObjectDeposit(uint _objId) returns (uint) {
+    return objects[_objId].deposit;
+  }
+
+  function getObjectPricePerDay(uint _objId) returns (uint) {
+    return objects[_objId].pricePerDay;
   }
 
   function getObjectDescription(uint _objId) returns (string) {
@@ -130,6 +122,15 @@ contract RentableObjects {
   function getObjectClientTime(uint _objId) returns (uint) {
     return now - objects[_objId].client.since;
   }
+
+  function getObjectClientAddress(uint _objId) returns (address) {
+    return objects[_objId].client.cliAddress;
+  }
+
+  function getObjectClientContactInfo(uint _objId) returns (string) {
+    return objects[_objId].client.contactInfo;
+  }
+
 
   // Fallback function results in nothing
   function () {

@@ -126,6 +126,13 @@ function viewRegisterPage(state) {
 function objectIsRegistered(objId, callBack) {
   var rentable = RentableObjects.deployed();
 
+  rentable.getNow.call({from: account}).then(function(value) {
+    console.log("Now: ", value.c[0]);
+  }).catch(function (e) {
+    console.log(e);
+    setStatus("Error getting objectIsRegistered()");
+  });
+
   rentable.objectIsRegistered.call(objId, {from: account}).then(function(value) {
     callBack(value);
   }).catch(function (e) {
@@ -145,14 +152,25 @@ function objectIsRented(objId, callBack) {
   });
 }
 
-function getObjectPrice(objId, callBack) {
+function getObjectDeposit(objId, callBack) {
   var rentable = RentableObjects.deployed();
 
-  rentable.getObjectPrice.call(objId, {from: account}).then(function (value) {
+  rentable.getObjectDeposit.call(objId, {from: account}).then(function (value) {
     callBack(parseInt(value));
   }).catch(function (e) {
     console.log(e);
-    setStatus("Error executing getObjectPrice()");
+    setStatus("Error executing getObjectDeposit()");
+  });
+}
+
+function getObjectPricePerDay(objId, callBack) {
+  var rentable = RentableObjects.deployed();
+
+  rentable.getObjectPricePerDay.call(objId, {from: account}).then(function (value) {
+    callBack(parseInt(value));
+  }).catch(function (e) {
+    console.log(e);
+    setStatus("Error executing getObjectPricePerDay()");
   });
 }
 
@@ -202,7 +220,7 @@ function getObjectClientAddress(objId, callBack) {
 
 function refreshStatus(objId) {
   //var rentable = RentableObjects.deployed();
-  setStatus("Refreshing object status...");
+
   var addressElement = document.getElementById("address");
   addressElement.innerHTML = account;
 
@@ -237,11 +255,16 @@ function refreshDetails(objId) {
   // Contract abstraction layer for net-deployed contract:
   // var rentable = RentableObject.at(0x....);
 
-  setStatus("Refreshing object details...");
-  getObjectPrice(objId, function (value) {
-    var priceElement = document.getElementById("price");
-    var price = parseInt(value) * wei;
-    priceElement.innerHTML = price.toFixed(4);
+  getObjectDeposit(objId, function (value) {
+    var depositElement = document.getElementById("deposit");
+    var deposit = parseInt(value) * wei;
+    depositElement.innerHTML = deposit.toFixed(4);
+  });
+
+  getObjectPricePerDay(objId, function (value) {
+    var pricePerDayElement = document.getElementById("pricePerDay");
+    var pricePerDay = parseInt(value) * wei;
+    pricePerDayElement.innerHTML = pricePerDay.toFixed(4);
   });
 
   getObjectDescription(objId, function (value) {
@@ -262,12 +285,12 @@ function refreshDetails(objId) {
 
 function registerObject(objId) {
   var rentable = RentableObjects.deployed();
-  var price = parseInt(document.getElementById("_price").value);
-  var deposit = parseInt(document.getElementById("_deposit").value);
+  var deposit = parseInt(document.getElementById("_deposit").value) / wei;
+  var pricePerDay = parseInt(document.getElementById("_pricePerDay").value) / wei;
   var description = document.getElementById("_description").value;
 
   console.log(rentable);
-  console.log(price);
+  console.log(pricePerDay);
   console.log(deposit);
   console.log(description);
   console.log(objId);
@@ -277,7 +300,7 @@ function registerObject(objId) {
   setTimeout(function(){ setLoading(false); }, 3000);
 
   // ToDo: we should store the value for deposit here, shouldn't we?
-  rentable.addObject(objId, price, description, {from: account, gas: 1000000}).then(function(regSuccess) {
+  rentable.registerObject(objId, deposit, pricePerDay, description, {from: account, gas: 1000000}).then(function(regSuccess) {
     if (regSuccess) {
       setStatus("New object registered successfully.");
     }
@@ -285,6 +308,7 @@ function registerObject(objId) {
       setStatus("Object registering not possible. Please try again.");
     }
     refreshStatus(objId);
+    refreshDetails(objId);
   }).catch(function (e) {
     console.log(e);
     setStatus("Error registering object; see log.");
@@ -298,7 +322,7 @@ function unregisterObject(objId) {
 
   setStatus("Unregistering object... (please wait)");
 
-  rentable.removeObject(objId, {from: account, gas: 1000000}).then(function (success) {
+  rentable.unregisterObject(objId, {from: account, gas: 1000000}).then(function (success) {
     if (success) {
       setStatus("Object removed successfully.");
       refreshStatus(account);
@@ -316,11 +340,11 @@ function unregisterObject(objId) {
 function rentObject(objId) {
   setStatus("Renting object... (please wait)");
 
-  getObjectPrice(objId, function (objPrice) {
+  getObjectDeposit(objId, function (deposit) {
     var rentable = RentableObjects.deployed();
     var contactInfo = document.getElementById("_contactInfo").value;
 
-    rentable.rentObject(objId, contactInfo, {from: account, value: objPrice, gas: 1000000}).then(function(success) {
+    rentable.rentObject(objId, contactInfo, {from: account, value: deposit, gas: 1000000}).then(function(success) {
       if (success) {
         setStatus("Object successfully rented.");
       }
