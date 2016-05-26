@@ -16,9 +16,11 @@
   <link rel="stylesheet" href="assets/css/ie8.css"/><![endif]-->
   <script type="text/javascript" src="./js/jquery.min.js"></script>
   <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
-  <!--<link href="./app.css" rel='stylesheet' type='text/css'>-->
+  <!-- <link href="./app.css" rel='stylesheet' type='text/css'> -->
   <script src="./app.js"></script>
   <script>
+    var objId;
+
     window.onload = function () {
       web3.eth.getAccounts(function (err, accs) {
         if (err != null) {
@@ -37,11 +39,13 @@
         refreshBalance(account);
 
         var objIdElement = document.getElementById("_objId");
-        var objId = get('objId');
-        if (objId != undefined) {
+        var _objId = get('objId');
+        if (_objId != undefined) {
+          objId = _objId;
+
           objIdElement.value = objId;
-          refreshStatus(objIdElement.value);
-          refreshDetails(objIdElement.value);
+          refreshStatus(objId);
+          refreshDetails(objId);
 
           switchPageView(objId);
         }
@@ -105,7 +109,8 @@
     <button id="cambutton">Activate Camera</button>
 
     <div id="camcontainer" style="width:100%; overflow:hidden; position: relative;">
-      <video id="camsource" autoplay style="position: relative; display: none; margin-top: 20px">We could not detect your camera. Sorry.
+      <video id="camsource" autoplay style="position: relative; display: none; margin-top: 20px">We could not detect
+        your camera. Sorry.
       </video>
       <canvas id="qr-canvas" style="display:none"></canvas>
     </div>
@@ -129,29 +134,56 @@
     <!-- Page with object information -->
     <div id="objectInformation" style="display:none;">
       <!-- <h4>Object ID is: <span class="black"><span id="objId"></span></span></h4>
-        <h4>This device is <span class="black"><span id="registered"></span></span>registered.</h4>
-        <h4>This device is <span class="black"><span id="rented"></span></span>rented.</h4>
-        <h4>Price: <span class="black"><span id="price"></span> Ether</span></h4>
-        <h4><span class="black"><span id="description"></span></span></h4>
-        <h4>Contact info: <span class="black"><span id="contactInfo"></span></span></h4> -->
+      <h4>This device is <span class="black"><span id="registered"></span></span>registered.</h4>
+      <h4>This device is <span class="black"><span id="rented"></span></span>rented.</h4>
+      <h4>Price: <span class="black"><span id="price"></span> Ether</span></h4>
+      <h4><span class="black"><span id="description"></span></span></h4>
+      <h4>Contact info: <span class="black"><span id="contactInfo"></span></span></h4> -->
     </div>
 
     <!-- Page to show information for the current renter -->
     <div id="rentOverview" style="display:none;">
       <h3>Rental Overview</h3><br>
       <h4>You have rented this device for <span class="black"><span id="clientTime"></span></span> seconds.</h4>
-      <br><br><button id="returnObject" onclick="returnObject(_objId.value);switchPageView(_objId.value);">Return Object</button>
+      <br><br>
+      <button id="returnObject" onclick="returnObject(_objId.value);switchPageView(_objId.value);">Return Object
+      </button>
     </div>
 
     <!-- Page with renting information -->
     <div id="rentingPage" style="display:none;">
-      <h4>Object ID is: <span class="black"><span id="objId"></span></span></h4>
-      <h4>Price: <span class="black"><span id="price"></span> Ether</span></h4>
-      <h4><span class="black"><span id="description"></span></span></h4>
-      <h4>Contact info: <span class="black"><span id="contactInfo"></span></span></h4>
+      <table style="text-align: left; margin-top: 20px">
+        <tr>
+          <td>Object ID is:</td>
+          <td><span class="black"><span id="objId"></span></span></td>
+        </tr>
+        <tr>
+          <td>This device is</td>
+          <td><span class="black"><span id="registered"></span></span>registered.</td>
+        </tr>
+        <tr>
+          <td>This device is</td>
+          <td><span class="black"><span id="rented"></span></span>rented.</td>
+        </tr>
+        <tr>
+          <td>Price per day:</td>
+          <td><span class="black"><span id="pricePerDay"></span> Ether</span></td>
+        </tr>
+        <tr>
+          <td>Deposit:</td>
+          <td><span class="black"><span id="deposit"></span> Ether</span></td>
+        </tr>
+        <tr>
+          <td></td>
+          <td><span class="black"><span id="description"></span></span></td>
+        </tr>
+        <tr>
+          <td>Contact info:</td>
+          <td><span class="black"><span id="contactInfo"></span></span></td>
+        </tr>
+      </table>
 
-      <br><br>
-      <button id="rentObject" onclick="rentObject(_objId.value);switchPageView(_objId.value);">Rent Object</button>
+      <button id="rentObject" onclick="rentObject(objId);switchPageView(objId);">Rent Object</button>
     </div>
 
     <!-- Page to register a new object -->
@@ -167,15 +199,15 @@
           <td><input type="text" id="_description" placeholder="Bosch Bohrmaschine"></td>
         </tr>
         <tr>
-          <td><label for="_price">Price per day:</label></td>
-          <td><input type="number" id="_price" placeholder="e.g., 5"></td>
+          <td><label for="_pricePerDay">Price per day:</label></td>
+          <td><input type="number" id="_pricePerDay" placeholder="e.g., 5"></td>
         </tr>
         <tr>
           <td><label for="_deposit">Deposit:</label></td>
           <td><input type="number" id="_deposit" placeholder="e.g., 95"></td>
         </tr>
       </table>
-      <button id="register" onclick="registerObject(_objId.value);switchPageView(_objId.value);">Register Object
+      <button id="register" onclick="registerObject(objId);switchPageView(objId);">Register Object
       </button>
     </div>
 
