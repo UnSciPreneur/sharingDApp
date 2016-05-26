@@ -2,7 +2,6 @@ contract RentableObjects {
 
   struct Client {
     address cliAddress;
-    string contactInfo;
     uint since;
     bool exists;
   }
@@ -29,7 +28,7 @@ contract RentableObjects {
 
   function registerObject(uint _objId, uint _deposit, uint _pricePerDay, string _descr) returns (bool) {
     if (objectIsRegistered(_objId) == false) {
-      Client memory nilClient = Client({cliAddress: 0, contactInfo: "", since: now, exists: false});
+      Client memory nilClient = Client({cliAddress: 0, since: now, exists: false});
       objects[_objId] = Object({objId: _objId, description: _descr, deposit: _deposit, pricePerDay: _pricePerDay, client: nilClient, created: now, owner: msg.sender, exists: true});
       return true;
     }
@@ -49,11 +48,11 @@ contract RentableObjects {
     }
   }
 
-  function rentObject(uint _objId, string _contactInfo) returns (bool) {
+  function rentObject(uint _objId) returns (bool) {
     // if ( (objectIsRented(_objId) == false) && (msg.value >= getObjectPrice(_objId)) ) {
     if (msg.value >= objects[_objId].deposit) {
       // add client to object
-      objects[_objId].client = Client({cliAddress: msg.sender, contactInfo: _contactInfo, since: now, exists: true});
+      objects[_objId].client = Client({cliAddress: msg.sender, since: now, exists: true});
       // send back any excess ether
       objects[_objId].client.cliAddress.send(msg.value - objects[_objId].deposit);
       // send confirmation to object
@@ -69,7 +68,7 @@ contract RentableObjects {
   function returnObject(uint _objId) returns (bool) {
     if ( (objectIsRented(_objId) == true) && (msg.sender == getObjectClientAddress(_objId)) ) {
       msg.sender.send(getReturnDeposit(_objId));
-      objects[_objId].client = Client({cliAddress: 0, contactInfo: "", since: now, exists: false});
+      objects[_objId].client = Client({cliAddress: 0, since: now, exists: false});
       return true;
     }
     else {
@@ -99,7 +98,7 @@ contract RentableObjects {
     uint returnDeposit = objects[_objId].deposit - rentalCost;
     return returnDeposit;
   }
-  
+
   function getObjectDeposit(uint _objId) returns (uint) {
     return objects[_objId].deposit;
   }
@@ -122,10 +121,6 @@ contract RentableObjects {
 
   function getObjectClientAddress(uint _objId) returns (address) {
     return objects[_objId].client.cliAddress;
-  }
-
-  function getObjectClientContactInfo(uint _objId) returns (string) {
-    return objects[_objId].client.contactInfo;
   }
 
 
