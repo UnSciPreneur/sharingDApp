@@ -267,6 +267,12 @@ function refreshDetails(objId) {
     pricePerDayElement.innerHTML = pricePerDay.toFixed(4);
   });
 
+  getObjectDeposit(objId, function (value) {
+    var depositElement = document.getElementById("deposit");
+    var deposit = parseInt(value) * wei;
+    depositElement.innerHTML = deposit.toFixed(4);
+  });
+
   getObjectDescription(objId, function (value) {
     var descriptionElement = document.getElementById("description");
     descriptionElement.innerHTML = value;
@@ -298,6 +304,7 @@ function registerObject(objId) {
   setStatus("Registering object... (please wait)");
   setLoading(true);
   setTimeout(function(){ setLoading(false); }, 3000);
+  // we store all value in wei
 
   // ToDo: we should store the value for deposit here, shouldn't we?
   rentable.registerObject(objId, deposit, pricePerDay, description, {from: account, gas: 1000000}).then(function(regSuccess) {
