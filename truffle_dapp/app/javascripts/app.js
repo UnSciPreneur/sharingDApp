@@ -152,6 +152,9 @@ function toggleAccounts() {
   addressElement.innerHTML = account;
   refreshBalance();
 
+  // emptying potential status messages
+  setStatus("");
+
   // only call switchPageView if we already have selected an object
   if (objectId !== undefined) {
     switchPageView();

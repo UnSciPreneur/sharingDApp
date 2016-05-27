@@ -2,6 +2,7 @@ navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia 
 
 var cam_video_id = "camsource";
 var streaming = false;
+var track;
 
 $("#cambutton").click(function () {
   activateCam()
@@ -14,6 +15,8 @@ function deactivateCam() {
   var video = document.getElementById(cam_video_id);
   video.removeEventListener("canplay",resizeCamCanvas);
   video.style.display = "none";
+
+  track.stop();
 
   $("#cambutton").html("Activate Camera");
   $("#cambutton").unbind();
@@ -77,6 +80,7 @@ function activateCam() {
     navigator.getUserMedia(options, function (stream) {
       video.src = (window.URL && window.URL.createObjectURL(stream)) || stream;
       video.width = camcontainer.clientWidth;
+      track = stream.getTracks()[0];
     }, function (error) {
       console.log(error)
     });
