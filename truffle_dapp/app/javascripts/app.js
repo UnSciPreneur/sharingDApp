@@ -40,8 +40,6 @@ function switchPageView() {
   refreshDetails();
   refreshBalance();
 
-  console.log("Switching for objectId=" + objectId);
-
   objectIsRegistered(objectId, function (registered) {
     if (registered) {
       // object is registered
@@ -53,9 +51,9 @@ function switchPageView() {
               // account is client -> show rentOverview
               document.getElementById("ownersPage").style.display = "none";
               document.getElementById("reclaimPage").style.display = "none";
-              document.getElementById("rentOverview").style.display = "inline";
+              document.getElementById("rentOverview").style.display = "block";
               document.getElementById("rentingPage").style.display = "none";
-              document.getElementById("objectInformation").style.display = "inline";
+              document.getElementById("objectInformation").style.display = "block";
               document.getElementById("registerPage").style.display = "none";
               document.getElementById("notFoundPage").style.display = "none";
             }
@@ -63,10 +61,10 @@ function switchPageView() {
               // account is owner -> show reclaimPage
               console.log("Account owns this (rented) object.");
               document.getElementById("ownersPage").style.display = "none";
-              document.getElementById("reclaimPage").style.display = "inline";
+              document.getElementById("reclaimPage").style.display = "block";
               document.getElementById("rentOverview").style.display = "none";
               document.getElementById("rentingPage").style.display = "none";
-              document.getElementById("objectInformation").style.display = "inline";
+              document.getElementById("objectInformation").style.display = "block";
               document.getElementById("registerPage").style.display = "none";
               document.getElementById("notFoundPage").style.display = "none";
             }
@@ -76,7 +74,7 @@ function switchPageView() {
               document.getElementById("reclaimPage").style.display = "none";
               document.getElementById("rentOverview").style.display = "none";
               document.getElementById("rentingPage").style.display = "none";
-              document.getElementById("objectInformation").style.display = "inline";
+              document.getElementById("objectInformation").style.display = "block";
               document.getElementById("registerPage").style.display = "none";
               document.getElementById("notFoundPage").style.display = "none";
             }
@@ -86,11 +84,11 @@ function switchPageView() {
           // object is unrented
           if ( account == contractOwner ) {
             // object is unrented -> show stats for owner
-            document.getElementById("ownersPage").style.display = "inline";
+            document.getElementById("ownersPage").style.display = "block";
             document.getElementById("reclaimPage").style.display = "none";
             document.getElementById("rentOverview").style.display = "none";
             document.getElementById("rentingPage").style.display = "none";
-            document.getElementById("objectInformation").style.display = "inline";
+            document.getElementById("objectInformation").style.display = "block";
             document.getElementById("registerPage").style.display = "none";
             document.getElementById("notFoundPage").style.display = "none";
           }
@@ -99,8 +97,8 @@ function switchPageView() {
             document.getElementById("ownersPage").style.display = "none";
             document.getElementById("reclaimPage").style.display = "none";
             document.getElementById("rentOverview").style.display = "none";
-            document.getElementById("rentingPage").style.display = "inline";
-            document.getElementById("objectInformation").style.display = "inline";
+            document.getElementById("rentingPage").style.display = "block";
+            document.getElementById("objectInformation").style.display = "block";
             document.getElementById("registerPage").style.display = "none";
             document.getElementById("notFoundPage").style.display = "none";
           }
@@ -116,7 +114,7 @@ function switchPageView() {
         document.getElementById("rentOverview").style.display = "none";
         document.getElementById("rentingPage").style.display = "none";
         document.getElementById("objectInformation").style.display = "none";
-        document.getElementById("registerPage").style.display = "inline";
+        document.getElementById("registerPage").style.display = "block";
         document.getElementById("notFoundPage").style.display = "none";
       }
       else {
@@ -127,7 +125,7 @@ function switchPageView() {
         document.getElementById("rentingPage").style.display = "none";
         document.getElementById("objectInformation").style.display = "none";
         document.getElementById("registerPage").style.display = "none";
-        document.getElementById("notFoundPage").style.display = "inline";
+        document.getElementById("notFoundPage").style.display = "block";
       }
     }
   });
@@ -190,10 +188,10 @@ function viewRegisterPage(state) {
   if ((registerPage != null) && (unregisterPage != null)) {
     if (state) {
       registerPage.style.display = "none";
-      unregisterPage.style.display = "inline";
+      unregisterPage.style.display = "block";
     }
     else {
-      registerPage.style.display = "inline";
+      registerPage.style.display = "block";
       unregisterPage.style.display = "none";
     }
   }
@@ -414,7 +412,7 @@ function rentObject() {
   setStatus("Renting object... (please wait)");
   getObjectDeposit(objectId, function (deposit) {
     var rentable = RentableObjects.deployed();
-    console.log("Renting objId:", objectId);
+    console.log("Renting object with objId=", objectId);
 
     rentable.rentObject(objectId, {from: account, value: deposit, gas: 1000000}).then(function (success) {
       if (success) {
@@ -438,11 +436,11 @@ function reclaimObject() {
   var rentable = RentableObjects.deployed();
   rentable.reclaimObject(objectId, {from: account, gas: 1000000}).then(function (success) {
     if (success) {
-      console.log("Object successfully reclaimed.");
+      console.log("Object with objectId=" + objectId + " successfully reclaimed.");
       setStatus("Object successfully reclaimed.");
     }
     else {
-      console.log("Reclaiming object not possible. Please try again.");
+      console.log("Reclaiming object objectId=" + objectId + " not possible. Please try again.");
       setStatus("Reclaiming object not possible. Please try again.");
     }
 

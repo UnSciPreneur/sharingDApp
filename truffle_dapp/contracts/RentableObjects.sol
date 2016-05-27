@@ -68,7 +68,8 @@ contract RentableObjects {
 
   function reclaimObject(uint _objId) returns (bool) {
     if ( (objectIsRented(_objId) == true) && (objects[_objId].owner == msg.sender) ) {
-      msg.sender.send(getReturnDeposit(_objId));
+      objects[_objId].owner.send(objects[_objId].deposit - getReturnDeposit(_objId));
+      objects[_objId].client.cliAddress.send(getReturnDeposit(_objId));
       objects[_objId].client = Client({cliAddress: 0, since: now, exists: false});
       return true;
     }

@@ -135,16 +135,11 @@
 
 <article id="contextmenu" class="container box style1">
   <div class="inner">
-    <!-- Page with owner info -->
-    <div id="ownersPage" style="display: none;">
-      <header><h2>Information</h2></header>
-      <p>You have registered this tool.</p>
-    </div>
 
     <!-- Object info -->
     <div id="objectInformation" style="display: none;">
       <header><h2>Object details</h2></header>
-      <table style="text-align: left; margin-top: 20px">
+      <table style="text-align: left; margin-top: 20px; margin-bottom: 20px">
         <tr>
           <td>Description:</td>
           <td><span class="black"><span id="description"></span></span></td>
@@ -155,11 +150,11 @@
         </tr>
         <tr style="display: none">
           <td>This device is</td>
-          <td><span class="black"><span id="registered"></span></span>registered.</td>
+          <td><span class="black"><span id="registered"></span></span>registered</td>
         </tr>
         <tr>
           <td>This device is</td>
-          <td><span class="black"><span id="rented"></span></span>rented.</td>
+          <td><span class="black"><span id="rented"></span></span>rented</td>
         </tr>
         <tr>
           <td>Price per day:</td>
@@ -170,6 +165,12 @@
           <td><span class="black"><span id="deposit"></span> Ether</span></td>
         </tr>
       </table>
+    </div>
+
+    <!-- Page with owner info -->
+    <div id="ownersPage" style="display: none;">
+      <header><h2>Information</h2></header>
+      <p>You have registered this tool.</p>
     </div>
 
     <!-- Page with object information -->
