@@ -10,6 +10,14 @@ var wei = 1 / 1000000000000000000;
 var blockCreator = setInterval(function () {
   console.log("Creating Block.");
   web3.eth.sendTransaction({from: accounts[2], to: accounts[2], value: 5});
+
+  if (objectId != undefined) {
+    getObjectClientTime(objectId, function (clientTime) {
+      var clientTimeElement = document.getElementById("clientTime");
+      clientTimeElement.innerHTML = parseInt(clientTime);
+    });
+  }
+
 }, 30000);
 
 function initState() {
