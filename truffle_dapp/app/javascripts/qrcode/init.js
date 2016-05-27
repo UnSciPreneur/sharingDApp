@@ -60,18 +60,17 @@ function activateCam() {
   $("#cambutton").click(function () {
     deactivateCam()
   });
+  var camcontainer = document.getElementById("camcontainer");
   var video = document.getElementById(cam_video_id);
   video.style.display = "inline-block";
 
   startRecoding();
 
-  // Assign the <video> element to a variable
-  var video = document.getElementById(cam_video_id);
-  var camcontainer = document.getElementById("camcontainer");
-
+  // the following should be working according to
+  // http://w3c.github.io/mediacapture-main/getusermedia.html#def-constraint-facingMode
   var options = {
     "audio": false,
-    "video": {facingMode: {exact: false}}
+    "video": { facingMode: {exact: "environment"} }
   };
   // Replace the source of the video element with the stream from the camera
   if (navigator.getUserMedia) {
