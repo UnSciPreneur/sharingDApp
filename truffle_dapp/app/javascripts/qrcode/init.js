@@ -71,7 +71,7 @@ function activateCam() {
 
   var options = {
     "audio": false,
-    "video": {facingMode: {exact: 'environment'}}
+    "video": {facingMode: {exact: false}}
   };
   // Replace the source of the video element with the stream from the camera
   if (navigator.getUserMedia) {
