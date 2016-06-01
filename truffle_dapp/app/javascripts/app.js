@@ -150,7 +150,6 @@ function toggleAccounts() {
   }
   var addressElement = document.getElementById("address");
   addressElement.innerHTML = account;
-  refreshBalance();
 
   // emptying potential status messages
   setStatus("");
@@ -159,6 +158,9 @@ function toggleAccounts() {
   if (objectId !== undefined) {
     switchPageView();
     console.log("Switching page view");
+  } else {
+    // switchPageView executes refreshBalance internally
+    refreshBalance();
   }
 }
 
@@ -382,8 +384,6 @@ function registerObject() {
     else {
       setStatus("Object registering not possible. Please try again.");
     }
-    refreshStatus();
-    refreshDetails();
     switchPageView();
   }).catch(function (e) {
     console.log(e);
@@ -399,12 +399,11 @@ function unregisterObject() {
   rentable.unregisterObject(objectId, {from: account, gas: 1000000}).then(function (success) {
     if (success) {
       setStatus("Object removed successfully.");
-      refreshStatus();
     }
     else {
       setStatus("Unregistering object not possible. Please try again.");
-      refreshStatus();
     }
+    refreshStatus();
   }).catch(function (e) {
     console.log(e);
     setStatus("Error unregistering object; see log.");
