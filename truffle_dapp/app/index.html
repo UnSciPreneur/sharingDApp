@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<!--
+	Overflow by HTML5 UP
+	html5up.net | @n33co
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+<html>
+<head>
+  <title>ShareApp: Bosch powertools</title>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <!--[if lte IE 8]>
+  <script src="assets/js/ie/html5shiv.js"></script><![endif]-->
+  <link rel="stylesheet" href="assets/css/main.css"/>
+  <!--[if lte IE 8]>
+  <link rel="stylesheet" href="assets/css/ie8.css"/><![endif]-->
+  <script type="text/javascript" src="./js/jquery.min.js"></script>
+  <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+  <link href="./app.css" rel='stylesheet' type='text/css'>
+  <script src="./app.js"></script>
+  <script>
+    window.onload = function () {
+      web3.eth.getAccounts(function (err, accs) {
+        if (err != null) {
+          alert("There was an error fetching your accounts.");
+          console.log(err, accs);
+          return;
+        }
+
+        if (accs.length == 0) {
+          alert("Couldn't get any accounts! Make sure your Ethereum client is configured correctly.");
+          return;
+        }
+
+        initState();
+
+        accounts = accs;
+
+        var accNum = parseInt(get('accNum'));
+        console.log(accNum);
+        if ((accNum == 0) || (accNum == 1) || (accNum == 2)) {
+          console.log("Switching to Account: ", accNum);
+          account = accounts[accNum];
+        }
+        else {
+          account = accounts[0];
+          var remoteUrl = "192.168";
+          if (window.location.href.indexOf(remoteUrl) >= 0) {
+            // we are on the remote host
+            account = accounts[1];
+          }
+        }
+
+        refreshBalance();
+
+        var objIdElement = document.getElementById("_objId");
+        var _objId = get('objId');
+        if (_objId != undefined) {
+          objectId = _objId;
+          objIdElement.value = _objId;
+          switchPageView();
+        }
+      });
+    }
+  </script>
+</head>
+<body>
+
+<div id="loadingDiv" style="display:none">
+  <img src="./images/colorful_loading.gif">
+</div>
+
+
+<!-- Header -->
+<section id="header">
+  <header>
+    <h1>ShareApp</h1>
+    <p>By <a href="http://iot-lab.ch">Bosch IoT Lab</a></p>
+  </header>
+  <footer>
+    <a href="#banner" class="button style2 scrolly-middle">Rent now!</a>
+  </footer>
+</section>
+
+<!-- Banner -->
+<section id="banner">
+  <header>
+    <h2>Renting tools on the blockchain</h2>
+  </header>
+  <p style="max-width:1000px; margin: auto">This app let's you rent power tools directly from the Ethereum blockchain.
+    All you need is an Ethereum client. No upfront registration, no third party billing.</p>
+  <h3>This is how it works</h3>
+  <p>1. Scan the barcode on a tool of your choice.</p>
+  <p>2. Read and sign the rental agreement.</p>
+  <p>3. Recollect your deposit on return of the tool.</p>
+  <footer>
+    <a href="#account" class="button style2 scrolly">Let's do this!</a>
+  </footer>
+</section>
+
+<article id="account" class="container box style1">
+  <div class="inner">
+    <header><h2>Your account</h2></header>
+    <h4><span class="black"><span id="address"></span></span></h4>
+
+    <p>You have <span class="black"><span id="balance"></span> Ether</span></p>
+    <span id="status"></span><br>
+
+    <button id="toggleAccounts" onclick="toggleAccounts();">Toggle Accounts</button>
+  </div>
+</article>
+
+<!-- Feature 2 -->
+<article id="first" class="container box style1">
+  <div class="inner">
+    <header>
+      <h2>Select a Bosch Powertool</h2>
+    </header>
+    <p>Switch on your camera and scan a barcode on one of a Bosch power tool.</p>
+    <button id="cambutton">Activate Camera</button>
+
+    <div id="camcontainer" style="width:100%; overflow:hidden; position: relative;">
+      <video id="camsource" autoplay style="position: relative; display: none; margin-top: 20px">We could not detect
+        your camera. Sorry.
+      </video>
+      <canvas id="qr-canvas" style="display:none"></canvas>
+    </div>
+
+    <!--
+    <h3 id="qr-value">Url:</h3>
+
+    <h2>Select an object to rent</h2>
+    <br><label for="_objId">Object Id:</label>
+    <input type="text" id="_objId" placeholder="0x93e66d9"
+           onchange="switchPageView(this.value);"> -->
+  </div>
+</article>
+
+<!-- Beginning of pages switching in switchPageView -->
+
+<article id="contextmenu" class="container box style1">
+  <div class="inner">
+
+    <!-- Object info -->
+    <div id="objectInformation" style="display: none;">
+      <header><h2>Object details</h2></header>
+      <table style="text-align: left; margin-top: 20px; margin-bottom: 20px">
+        <tr>
+          <td>Description:</td>
+          <td><span class="black"><span id="description"></span></span></td>
+        </tr>
+        <tr>
+          <td>Object ID is:</td>
+          <td><span class="black"><span id="objId"></span></span></td>
+        </tr>
+        <tr style="display: none">
+          <td>This device is</td>
+          <td><span class="black"><span id="registered"></span></span>registered</td>
+        </tr>
+        <tr>
+          <td>This device is</td>
+          <td><span class="black"><span id="rented"></span></span>rented</td>
+        </tr>
+        <tr>
+          <td>Price per day:</td>
+          <td><span class="black"><span id="pricePerDay"></span> Ether</span></td>
+        </tr>
+        <tr>
+          <td>Deposit:</td>
+          <td><span class="black"><span id="deposit"></span> Ether</span></td>
+        </tr>
+      </table>
+    </div>
+
+    <!-- Page with owner info -->
+    <div id="ownersPage" style="display: none;">
+      <header><h2>Information</h2></header>
+      <p>You have registered this tool.</p>
+    </div>
+
+    <!-- Page with object information -->
+    <div id="reclaimPage" style="display:none;">
+      <header><h2>Take back Object</h2></header>
+      <p>Take back the rented device and refund the deposit (minus rent).</p>
+      <!--<h4>Object ID is: <span class="black"><span id="objId"></span></span></h4>
+      <h4>This device is <span class="black"><span id="registered"></span></span>registered.</h4>
+      <h4>This device is <span class="black"><span id="rented"></span></span>rented.</h4>
+      <h4>Price: <span class="black"><span id="price"></span> Ether</span></h4>
+      <h4><span class="black"><span id="description"></span></span></h4> -->
+      <button id="reclaimObject" onclick="reclaimObject();switchPageView();">Take back Object</button>
+    </div>
+
+    <!-- Page to show information for the current renter -->
+    <div id="rentOverview" style="display:none;">
+      <header><h2>Rental Overview</h2></header>
+      <h4>You have rented the device <span class="black"><span id="clientObject"></span></span> for <span class="black"><span
+          id="clientTime"></span></span> seconds.</h4>
+    </div>
+
+    <!-- Page with renting information -->
+    <div id="rentingPage" style="display:none;">
+      <header><h2>Information</h2></header>
+
+      <p>By renting this object you agree to the <em>Terms and Conditions</em>.</p>
+      <button id="rentObject" onclick="rentObject();">Rent Object</button>
+    </div>
+
+    <!-- Page to register a new object -->
+    <div id="registerPage" style="display:none;">
+      <h1>Register this device:</h1>
+      <table style="text-align: left; margin-top: 20px">
+        <tr>
+          <td><label for="_objId">Object Id:</label></td>
+          <td><input type="text" id="_objId" disabled></td>
+        </tr>
+        <tr>
+          <td><label for="_description">Object description:</label></td>
+          <td><input type="text" id="_description" placeholder="Bosch Bohrmaschine"></td>
+        </tr>
+        <tr>
+          <td><label for="_pricePerDay">Price per day:</label></td>
+          <td><input type="number" id="_pricePerDay" placeholder="e.g., 5"></td>
+        </tr>
+        <tr>
+          <td><label for="_deposit">Deposit:</label></td>
+          <td><input type="number" id="_deposit" placeholder="e.g., 95"></td>
+        </tr>
+      </table>
+      <button id="register" onclick="registerObject();switchPageView();">Register Object
+      </button>
+    </div>
+
+    <!-- 404 Object not found page -->
+    <div id="notFoundPage" style="display:none;">
+      <h1>Object not found</h1>
+      <p>We are sorry to tell that we could not find the object you are looking for.</p>
+    </div>
+  </div>
+</article>
+
+<section id="footer">
+  <ul class="icons">
+    <li><a href="#" class="icon fa-twitter"><span class="label">Twitter</span></a></li>
+    <li><a href="#" class="icon fa-facebook"><span class="label">Facebook</span></a></li>
+    <li><a href="#" class="icon fa-google-plus"><span class="label">Google+</span></a></li>
+    <li><a href="#" class="icon fa-pinterest"><span class="label">Pinterest</span></a></li>
+    <li><a href="#" class="icon fa-dribbble"><span class="label">Dribbble</span></a></li>
+    <li><a href="#" class="icon fa-linkedin"><span class="label">LinkedIn</span></a></li>
+  </ul>
+  <div class="copyright">
+    <ul class="menu">
+      <li>&copy; Bosch IoT Lab. All rights reserved.</li>
+      <li>Design: <a href="http://html5up.net">HTML5 UP</a></li>
+    </ul>
+  </div>
+</section>
+
+<!-- Scripts -->
+<script src="https://webrtc.github.io/adapter/adapter-latest.js"></script>
+<script type="text/javascript" src="./js/qrcode-reader.js"></script>
+<script type="text/javascript" src="./js/qrcode-init.js"></script>
+
+<!-- <script src="js/jquery.min.js"></script>  -->
+<script src="assets/js/jquery.scrolly.min.js"></script>
+<script src="assets/js/jquery.poptrox.min.js"></script>
+<script src="assets/js/skel.min.js"></script>
+<script src="assets/js/util.js"></script>
+<!--[if lte IE 8]>
+<script src="assets/js/ie/respond.min.js"></script><![endif]-->
+<script src="assets/js/main.js"></script>
+
+</body>
+</html>
