@@ -44,6 +44,11 @@
         }
         else {
           account = accounts[0];
+          var remoteUrl = "192.168";
+          if (window.location.href.indexOf(remoteUrl) >= 0) {
+            // we are on the remote host
+            account = accounts[1];
+          }
         }
 
         refreshBalance();
