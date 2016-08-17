@@ -149,7 +149,7 @@ function toggleAccounts() {
     account = accounts[0];
   }
   var addressElement = document.getElementById("address");
-  addressElement.innerHTML = account;
+  addressElement.innerHTML = formatAccountAddress(account);
 
   // emptying potential status messages
   setStatus("");
@@ -180,7 +180,7 @@ function setLoading(show) {
 
 function refreshBalance() {
   var addressElement = document.getElementById("address");
-  addressElement.innerHTML = account;
+  addressElement.innerHTML = formatAccountAddress(account);
 
   var balance = web3.eth.getBalance(account) * wei;
   var balanceElement = document.getElementById("balance");
@@ -290,7 +290,7 @@ function getObjectClientTime(objId, callBack) {
 function refreshStatus() {
 
   var addressElement = document.getElementById("address");
-  addressElement.innerHTML = account;
+  addressElement.innerHTML = formatAccountAddress(account);
 
   var objIdElement = document.getElementById("objId");
   objIdElement.innerHTML = objectId;
@@ -451,4 +451,8 @@ function reclaimObject() {
     console.log(e);
     setStatus("Error returning object; see log.");
   });
+}
+
+function formatAccountAddress(account) {
+  return account.substr(0,32) + '...';
 }

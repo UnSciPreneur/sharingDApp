@@ -33,9 +33,7 @@ contract RentableObjects {
       objects[_objId] = Object({objId: _objId, description: _descr, deposit: _deposit, pricePerDay: _pricePerDay, client: nilClient, created: now, owner: msg.sender, exists: true});
       return true;
     }
-    else {
-      return false;
-    }
+    throw;
   }
 
   function unregisterObject(uint _objId) returns (bool) {
@@ -43,40 +41,35 @@ contract RentableObjects {
       delete objects[_objId];
       return true;
     }
-    else {
-      return false;
-      throw;
-    }
+    throw;
   }
 
   function rentObject(uint _objId) returns (bool) {
-    // if ( (objectIsRented(_objId) == false) && (msg.value >= getObjectPrice(_objId)) ) {
-    if (msg.value >= objects[_objId].deposit) {
-      // add client to object
-      objects[_objId].client = Client({cliAddress: msg.sender, since: now, exists: true});
-      // send back any excess ether
-      objects[_objId].client.cliAddress.send(msg.value - objects[_objId].deposit);
-      // send confirmation to object
-      //objects[_objId].objId.call.value(0)(objects[_objId].client.cliAddress);
-      return true;
-    }
-    else {
+    // ToDo: what happens if the _objId does not exist?
+    if (objectIsRented(_objId) || msg.value < objects[_objId].deposit) {
       throw;
-      return false;
     }
+    // add client to object
+    objects[_objId].client = Client({cliAddress: msg.sender, since: now, exists: true});
+    // send back any excess ether
+    if (!objects[_objId].client.cliAddress.send(msg.value - objects[_objId].deposit)) {
+      throw;
+    }
+    return true;
   }
 
   function reclaimObject(uint _objId) returns (bool) {
-    if ( (objectIsRented(_objId) == true) && (objects[_objId].owner == msg.sender) ) {
-      objects[_objId].owner.send(objects[_objId].deposit - getReturnDeposit(_objId));
-      objects[_objId].client.cliAddress.send(getReturnDeposit(_objId));
-      objects[_objId].client = Client({cliAddress: 0, since: now, exists: false});
-      return true;
-    }
-    else {
+    if (!objectIsRented(_objId) || objects[_objId].owner != msg.sender) {
       throw;
-      return false;
     }
+    if(!objects[_objId].owner.send(objects[_objId].deposit - getReturnDeposit(_objId))) {
+      throw;
+    }
+    if(!objects[_objId].client.cliAddress.send(getReturnDeposit(_objId))) {
+      throw;
+    }
+    objects[_objId].client = Client({cliAddress: 0, since: now, exists: false});
+    return true;
   }
 
   function objectIsRegistered(uint _objId) returns (bool) {
