@@ -46,7 +46,7 @@ module.exports = {
     "RentableObjects"
   ],
   rpc: {
-    host: "192.168.1.140",
+    host: "127.0.0.1",
     port: 18545
   }
 };

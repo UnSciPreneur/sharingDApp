@@ -1,3 +1,5 @@
+// pragma solidity ^0.4.8;
+
 contract RentableObjects {
 
   struct Client {
@@ -44,6 +46,7 @@ contract RentableObjects {
     throw;
   }
 
+  // ToDo: add the 'payable' modifier for newer versions of Solidity
   function rentObject(uint _objId) returns (bool) {
     // ToDo: what happens if the _objId does not exist?
     if (objectIsRented(_objId) || msg.value < objects[_objId].deposit) {
