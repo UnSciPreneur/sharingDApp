@@ -1,36 +1,41 @@
-#Truffle Webapp:
+# Truffle Webapp
 
+## Requirements
 
-### Install
-
+Run the following commands in the `truffle_dapp` directory to install required dependencies:
 ```
 $ npm install
-$ npm install -g truffle
+$ npm install -g truffle@1.*
 $ npm install -g ethereumjs-testrpc
-$ truffle [build|compile|serve]
 ```
-You can also run truffle via npm:
-```
-$ npm serve
-```
+**Attention:** It is important to install a version 1.* of truffle as our build scripts are not compatible with newer versions of truffle:
+http://truffleframework.com/docs/getting_started/build
 
-Note that you should have an ethereum client running. If you want to use the local testnetwork run
-```
-$ testrpc
-```
-You can also run geth with the rpc option as in
-```
-$ geth --rpc
-```
+## Running RPC or geth client
 
-Start geth with rpc and accept incoming requests from browserdomain at port 8080
+Note that you should have an ethereum client running before you can start the app. If you want to use the local `testrpc` run
 ```
-$ geth --testnet --rpc --rpccorsdomain "http://localhost:8080"
+$ rpcnetwork.sh
 ```
+This will open an rpc endpoint on port `18545` to avoid conflict with the standard geth rpc port. The testrpc is initialized with three accounts owning 200 or 100 ETH respectively.
+ 
+Instead you can also run the standard geth client with the rpc option (port `8545`) as in
+```
+$ geth --rpc [--testnet] --rpccorsdomain "http://localhost:8080"
+```
+In this case you have to provide accounts and a sufficient balance manually.
 
-Start testrpc with 3 testaccounts with 180, 90, 65 ether each
+Make sure that the settings in `truffle_dapp/truffle.js` match your choice. Both _host_ and _port_ must match your setup. 
+
+## Deploying and running the smart contract / app
+
+To deploy the smart contract into the ethereum network of your choice, i.e., _testrpc_ or _ropsten/mainnet_ = (global test network/main network) run the following in `truffle_dapp`:
 ```
-$ testrpc --account="0xd1071e040d9471d25644ec381ab616853eb68028588fe17b2e4398b6853fef63,180000000000000000000" --account="0xe3a3c5ba1c42089db864600986f9cb469433a519c36a423e49899e50bcd3296f,90000000000000000000" --account="0x45e22b6b2e3e060b8faf85d05fef075b36f0902bc4d2e5af66adac848d9ba92,65000000000000000000"
+$ truffle deploy
+```
+Then start the dapp with:
+```
+$ truffle serve
 ```
 
 ### Design
