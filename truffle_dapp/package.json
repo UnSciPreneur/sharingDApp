@@ -8,14 +8,15 @@
   "homepage": "https://iot-lab.ch",
   "repository": {
     "type": "git",
-    "url": "https://github.com/ameeuw/IoTlab_dapp/"
+    "url": "https://github.com/UnSciPreneur/sharingDApp/"
   },
   "engines": {
-    "node": ">=0.8"
+    "npm": ">=3.10.0",
+    "node": ">=6.9.1"
   },
   "dependencies": {
-    "qrcode-reader": "latest",
-    "jquery": ">=1.11.0"
+    "qrcode-reader": "0.2.1",
+    "jquery": "3.1.0"
   },
   "scripts": {
     "serve": "truffle serve"

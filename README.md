@@ -1,10 +1,12 @@
-# IoTlab_dapp
+# Sharing DApp
 
 This repository holds the code for a distributed app meant to run on the ethereum blockchain.
 
-https://github.com/ameeuw/IoTlab_dapp/
+https://github.com/UnSciPreneur/sharingDApp/
 
 You will find more documentation regarding the app in `truffle_dapp/README.md`.
+
+This project has been implemented with the friendly support of the Bosch IoT Lab (www.iot-lab.ch).
 
 ## Generating QR Codes
 
