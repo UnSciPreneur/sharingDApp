@@ -10,6 +10,12 @@ You will find more documentation regarding the app in `truffle_dapp/README.md`.
 
 This project has been implemented with the friendly support of the Bosch IoT Lab (www.iot-lab.ch).
 
+## Using the camera to detect QR Codes
+
+**Warning:** Modern browsers (e.g. Chrome 57.0) do not grant access to the camera to scripts that have not been loaded over HTTPS. The only exception being scripts loaded from `localhost`. So please wrap the communication with the app in HTTPS if you serve the app from a remote location. We have tested this with Apache 2.4 and `mod_proxy`. 
+
+If you only want to test the smart contracts and other app features you can circumvent the camera issue by entering the QR encoded urls manually. For a locally hosted app this would mean going to `http://localhost:8080/?objid=1234567` in your browser.
+
 ## Generating QR Codes
 
 The app comes with a QR code reader. The QR codes are expected to encode a link of the form `https://your-domain.tld/?objid=1234567` where the GET parameter `objid` contains the (not necessarily numerical) id of a (to be) registered object.   
