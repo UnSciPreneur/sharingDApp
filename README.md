@@ -10,6 +10,24 @@ You will find more documentation regarding the app in `truffle_dapp/README.md`.
 
 This project has been implemented with the friendly support of the Bosch IoT Lab (www.iot-lab.ch).
 
+## Getting started
+
+Check out the app from git using above URL. Then run (in `sharingDApp/`)
+```
+sudo npm install -g testrpc
+npm install
+./rpcnetwork.sh
+```
+and in a separate shell
+```
+cd truffle_dapp
+truffle deploy
+truffle serve
+```
+This will start up a `testrpc` client with the required accounts, deploy the smart contract into this test environment, and start the app. The app is then available at `http://localhost:8080`. 
+ 
+Of course you can use a full ethereum client instead of `testrpc`. Simply adjust the port settings in `truffle_dapp/truffle.js` and make sure that the accounts you want to use are unlocked.
+
 ## Using the camera to detect QR Codes
 
 **Warning:** Modern browsers (e.g. Chrome 57.0) do not grant access to the camera to scripts that have not been loaded over HTTPS. The only exception being scripts loaded from `localhost`. So please wrap the communication with the app in HTTPS if you serve the app from a remote location. We have tested this with Apache 2.4 and `mod_proxy`. 
