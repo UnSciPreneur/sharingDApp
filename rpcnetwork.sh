@@ -5,7 +5,7 @@ RED='\033[0;31m'
 printf "Starting up the ${RED}test network${NC}\n"
 
 HOST=localhost
-PORT=18545
+PORT=28545
 
 # filtering "eth_call" statements
 # highlighting "eth_sendTransaction"

@@ -32,10 +32,10 @@ Of course you can use a full ethereum client instead of `testrpc`. Simply adjust
 
 **Warning:** Modern browsers (e.g. Chrome 57.0) do not grant access to the camera to scripts that have not been loaded over HTTPS. The only exception being scripts loaded from `localhost`. So please wrap the communication with the app in HTTPS if you serve the app from a remote location. We have tested this with Apache 2.4 and `mod_proxy`. 
 
-If you only want to test the smart contracts and other app features you can circumvent the camera issue by entering the QR encoded urls manually. For a locally hosted app this would mean going to `http://localhost:8080/?objid=1234567` in your browser.
+If you only want to test the smart contracts and other app features you can circumvent the camera issue by entering the QR encoded urls manually. For a locally hosted app this would mean going to `http://localhost:8080/?objId=1234567` in your browser.
 
 ## Generating QR Codes
 
-The app comes with a QR code reader. The QR codes are expected to encode a link of the form `https://your-domain.tld/?objid=1234567` where the GET parameter `objid` contains the (not necessarily numerical) id of a (to be) registered object.   
+The app comes with a QR code reader. The QR codes are expected to encode a link of the form `https://your-domain.tld/?objId=1234567` where the GET parameter `objId` (mind the capital "I") contains the **numerical** id of a (to be) registered object.   
 
 In order to generate QR codes you can go here: http://www.qrstuff.com/

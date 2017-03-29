@@ -55,6 +55,7 @@
 
         var objIdElement = document.getElementById("_objId");
         var _objId = get('objId');
+        // the GET parameter 'objId' overrides a value set by the camera / qr code recognition
         if (_objId != undefined) {
           objectId = _objId;
           objIdElement.value = _objId;
@@ -125,13 +126,7 @@
       <canvas id="qr-canvas" style="display:none"></canvas>
     </div>
 
-    <!--
-    <h3 id="qr-value">Url:</h3>
-
-    <h2>Select an object to rent</h2>
-    <br><label for="_objId">Object Id:</label>
-    <input type="text" id="_objId" placeholder="0x93e66d9"
-           onchange="switchPageView(this.value);"> -->
+    <p id="qr-value" style="display: none"></p>
   </div>
 </article>
 
