@@ -1,8 +1,6 @@
 module.exports = {
   build: {
     "index.html": "index.html",
-    "test.html": "test.html",
-    "objectIndex.html": "objectIndex.html",
     "js/qrcode-reader.js": [
       "../node_modules/qrcode-reader/src/grid.js",
       "../node_modules/qrcode-reader/src/version.js",
@@ -36,7 +34,6 @@ module.exports = {
     "app.css": [
       "stylesheets/app.css"
     ],
-    "test.css": "stylesheets/test.css",
     "images/": "images/",
     "assets/css/": "assets/css/",
     "assets/fonts/": "assets/fonts/",
@@ -47,6 +44,6 @@ module.exports = {
   ],
   rpc: {
     host: "127.0.0.1",
-    port: 18545
+    port: 28545
   }
 };

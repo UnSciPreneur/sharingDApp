@@ -44,9 +44,15 @@ var camera = (function (p_vid_id, p_inter, p_scale) {
 
         deactivateCam();
         // select the object for registration/renting/return/...
-        // we are assuming 5-digit all numeric ids for simplicity
-        objectId = parseInt(result.substr(-5));
-        _objId.value = objectId;
+        // the contract expects a numerical id!
+        var cutIdx = result.indexOf('?objId=');
+        if (cutIdx >= 0) {
+          var objId = parseInt(result.substr(cutIdx + 7));
+          _objId.value = objId;
+          $("#qr-value").text(objId);
+        } else {
+          alert("Invalid URL in QR code!");
+        }
         switchPageView();
 
         //ToDo: make this scroll smoothly
