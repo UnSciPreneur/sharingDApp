@@ -14,15 +14,15 @@ This project has been implemented with the friendly support of the Bosch IoT Lab
 
 Check out the app from git using above URL. Then run (in `sharingDApp/`)
 ```
-sudo npm install -g ethereumjs-testrpc
-npm install
-./rpcnetwork.sh
+$ sudo npm install -g ethereumjs-testrpc
+$ ./rpcnetwork.sh
 ```
-and in a separate shell
+and in a separate shell (also in `sharingDApp/`)
 ```
-cd truffle_dapp
-truffle deploy
-truffle serve
+$ cd truffle_dapp
+$ npm install
+$ truffle deploy
+$ truffle serve
 ```
 This will start up a `testrpc` client with the required accounts, deploy the smart contract into this test environment, and start the app. The app is then available at `http://localhost:8080`. 
  

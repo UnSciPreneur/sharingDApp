@@ -5,7 +5,6 @@
 Run the following commands in the `truffle_dapp` directory to install required dependencies:
 ```
 $ npm install
-$ npm install -g truffle@1.*
 $ npm install -g ethereumjs-testrpc
 ```
 **Attention:** It is important to install a version 1.* of truffle as our build scripts are not compatible with newer versions of truffle:
@@ -17,7 +16,7 @@ Note that you should have an ethereum client running before you can start the ap
 ```
 $ rpcnetwork.sh
 ```
-This will open an rpc endpoint on port `18545` to avoid conflict with the standard geth rpc port. The testrpc is initialized with three accounts owning 200 or 100 ETH respectively.
+This will open an rpc endpoint on port `28545` to avoid conflict with the standard geth rpc port. The testrpc is initialized with three accounts owning 200 or 100 ETH respectively.
  
 Instead you can also run the standard geth client with the rpc option (port `8545`) as in
 ```
