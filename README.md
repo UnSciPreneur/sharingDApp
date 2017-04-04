@@ -14,7 +14,7 @@ This project has been implemented with the friendly support of the Bosch IoT Lab
 
 Check out the app from git using above URL. Then run (in `sharingDApp/`)
 ```
-sudo npm install -g testrpc
+sudo npm install -g ethereumjs-testrpc
 npm install
 ./rpcnetwork.sh
 ```
