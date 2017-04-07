@@ -37,6 +37,10 @@ Then start the dapp with:
 $ truffle serve
 ```
 
+## The Truffle Framework
+
+The project was originally built using version 1.* of http://truffleframework.com. At the time of writing we have version 3.2.* which requires a completely different format for the project config...
+
 ### Design
 
 By http://html5up.net/overflow. This design is free under the Creative Commons License (http://creativecommons.org/licenses/by/3.0/).
