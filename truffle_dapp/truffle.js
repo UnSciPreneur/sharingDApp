@@ -1,5 +1,7 @@
+var DefaultBuilder = require("truffle-default-builder");
+
 module.exports = {
-  build: {
+  build: new DefaultBuilder({
     "index.html": "index.html",
     "js/qrcode-reader.js": [
       "../node_modules/qrcode-reader/src/grid.js",
@@ -38,12 +40,22 @@ module.exports = {
     "assets/css/": "assets/css/",
     "assets/fonts/": "assets/fonts/",
     "assets/js/": "assets/js/"
-  },
-  deploy: [
-    "RentableObjects"
-  ],
-  rpc: {
-    host: "127.0.0.1",
-    port: 28545
+  }),
+  networks: {
+    development: {
+      host: "127.0.0.1",
+      port: 28545,
+      network_id: "*"
+    },
+    staging: {
+      host: "localhost",
+      port: 8546,
+      network_id: 1337
+    },
+    ropsten: {
+      host: "localhost",
+      port: 8545,
+      network_id: 3
+    }
   }
 };

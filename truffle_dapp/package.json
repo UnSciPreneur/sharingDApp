@@ -15,11 +15,18 @@
     "node": ">=6.9.1"
   },
   "dependencies": {
-    "truffle": "1.*",
+    "jquery": "3.1.0",
     "qrcode-reader": "0.2.1",
-    "jquery": "3.1.0"
+    "truffle": "latest",
+    "truffle-default-builder": "^2.0.0"
+  },
+  "devDependencies": {
+    "lite-server": "^2.3.0"
   },
   "scripts": {
-    "serve": "truffle serve"
+    "build": "truffle compile && truffle deploy",
+    "serve": "truffle serve",
+    "dev": "lite-server",
+    "test": "echo \"Error: no test specified\" && exit 1"
   }
 }

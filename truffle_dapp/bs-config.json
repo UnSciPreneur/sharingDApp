@@ -1,0 +1,5 @@
+{
+  "server": {
+    "baseDir": ["./environments/development/build", "./environments/development/contracts"]
+  }
+}

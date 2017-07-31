@@ -5,6 +5,7 @@
 Run the following commands in the `truffle_dapp` directory to install required dependencies:
 ```
 $ npm install
+$ npm install -g truffle
 $ npm install -g ethereumjs-testrpc
 ```
 **Attention:** It is important to install a version 1.* of truffle as our build scripts are not compatible with newer versions of truffle:
@@ -26,7 +27,12 @@ In this case you have to provide accounts and a sufficient balance manually.
 
 Make sure that the settings in `truffle_dapp/truffle.js` match your choice. Both _host_ and _port_ must match your setup. 
 
-## Deploying and running the smart contract / app
+## Compiling, deploying, and running the smart contract / app
+
+Before we can do anything with the smart contract we have to compile it
+```
+$ truffle compile
+```
 
 To deploy the smart contract into the ethereum network of your choice, i.e., _testrpc_ or _ropsten/mainnet_ = (global test network/main network) run the following in `truffle_dapp`:
 ```

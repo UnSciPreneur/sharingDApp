@@ -1,4 +1,4 @@
-// pragma solidity ^0.4.8;
+pragma solidity ^0.4.11;
 
 contract RentableObjects {
 
@@ -35,7 +35,7 @@ contract RentableObjects {
       objects[_objId] = Object({objId: _objId, description: _descr, deposit: _deposit, pricePerDay: _pricePerDay, client: nilClient, created: now, owner: msg.sender, exists: true});
       return true;
     }
-    throw;
+    revert();
   }
 
   function unregisterObject(uint _objId) returns (bool) {
@@ -43,34 +43,24 @@ contract RentableObjects {
       delete objects[_objId];
       return true;
     }
-    throw;
+    revert();
   }
 
-  // ToDo: add the 'payable' modifier for newer versions of Solidity
-  function rentObject(uint _objId) returns (bool) {
+  function rentObject(uint _objId) payable returns (bool) {
     // ToDo: what happens if the _objId does not exist?
-    if (objectIsRented(_objId) || msg.value < objects[_objId].deposit) {
-      throw;
-    }
+    assert(objectIsRented(_objId) || msg.value < objects[_objId].deposit);
     // add client to object
     objects[_objId].client = Client({cliAddress: msg.sender, since: now, exists: true});
     // send back any excess ether
-    if (!objects[_objId].client.cliAddress.send(msg.value - objects[_objId].deposit)) {
-      throw;
-    }
+    assert(!objects[_objId].client.cliAddress.send(msg.value - objects[_objId].deposit));
     return true;
   }
 
   function reclaimObject(uint _objId) returns (bool) {
-    if (!objectIsRented(_objId) || objects[_objId].owner != msg.sender) {
-      throw;
-    }
-    if(!objects[_objId].owner.send(objects[_objId].deposit - getReturnDeposit(_objId))) {
-      throw;
-    }
-    if(!objects[_objId].client.cliAddress.send(getReturnDeposit(_objId))) {
-      throw;
-    }
+    assert (!objectIsRented(_objId) || objects[_objId].owner != msg.sender);
+    assert (!objects[_objId].owner.send(objects[_objId].deposit - getReturnDeposit(_objId)));
+    assert (!objects[_objId].client.cliAddress.send(getReturnDeposit(_objId)));
+
     objects[_objId].client = Client({cliAddress: 0, since: now, exists: false});
     return true;
   }
@@ -131,7 +121,7 @@ contract RentableObjects {
 
   // Fallback function results in nothing
   function () {
-    throw;
+    revert();
   }
 
 }
