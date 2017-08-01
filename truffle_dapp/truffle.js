@@ -27,9 +27,6 @@ module.exports = {
       "javascripts/qrcode/init.js"
     ],
     "js/jquery.min.js": "../node_modules/jquery/dist/jquery.min.js",
-    "js/util.js": "assets/js/util.js",
-    "js/main.js": "assets/js/main.js",
-    "js/skel.min.js": "assets/js/skel.min.js",
     "app.js": [
       "javascripts/app.js"
     ],

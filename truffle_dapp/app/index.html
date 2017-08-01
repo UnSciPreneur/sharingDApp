@@ -10,59 +10,22 @@
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <!--[if lte IE 8]>
-  <script src="assets/js/ie/html5shiv.js"></script><![endif]-->
-  <link rel="stylesheet" href="assets/css/main.css"/>
-  <!--[if lte IE 8]>
-  <link rel="stylesheet" href="assets/css/ie8.css"/><![endif]-->
+  <script src="assets/js/ie/html5shiv.js"></script>
+  <link rel="stylesheet" href="assets/css/ie8.css" type='text/css'/>
+  <![endif]-->
   <script type="text/javascript" src="assets/js/jquery.js"></script>
+
+  <link rel="stylesheet" href="./assets/css/main.css" type='text/css'/>
+  <link rel='stylesheet' href="./assets/css/fonts.css" type='text/css'/>
+  <link rel='stylesheet' href="./stylesheets/app.css" type='text/css'/>
+  <!--
   <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
-  <link href="./app.css" rel='stylesheet' type='text/css'>
+  -->
   <script src="./app.js"></script>
   <script>
     window.onload = function () {
-      web3.eth.getAccounts(function (err, accs) {
-        if (err != null) {
-          alert("There was an error fetching your accounts.");
-          console.log(err, accs);
-          return;
-        }
-
-        if (accs.length == 0) {
-          alert("Couldn't get any accounts! Make sure your Ethereum client is configured correctly.");
-          return;
-        }
-
-        initState();
-
-        accounts = accs;
-
-        var accNum = parseInt(get('accNum'));
-        console.log(accNum);
-        if ((accNum == 0) || (accNum == 1) || (accNum == 2)) {
-          console.log("Switching to Account: ", accNum);
-          account = accounts[accNum];
-        }
-        else {
-          account = accounts[0];
-          var remoteUrl = "192.168";
-          if (window.location.href.indexOf(remoteUrl) >= 0) {
-            // we are on the remote host
-            account = accounts[1];
-          }
-        }
-
-        refreshBalance();
-
-        var objIdElement = document.getElementById("_objId");
-        var _objId = get('objId');
-        // the GET parameter 'objId' overrides a value set by the camera / qr code recognition
-        if (_objId != undefined) {
-          objectId = _objId;
-          objIdElement.value = _objId;
-          switchPageView();
-        }
-      });
-    }
+      EntryPoint.initWindow();
+    };
   </script>
 </head>
 <body>
@@ -104,9 +67,9 @@
     <header><h2>Your account</h2></header>
     <p><span class="black" style="text-transform: none"><span id="address"></span></span><br>
       You have <span class="black"><span id="balance"></span> Ether</span></p>
-    <span id="status"></span>
+    <span id="status" style="display:block; margin-bottom: 5px"></span>
 
-    <button id="toggleAccounts" onclick="toggleAccounts();">Toggle Accounts</button>
+    <button id="toggleAccounts" onclick="EntryPoint.toggleAccounts();">Toggle Accounts</button>
   </div>
 </article>
 
@@ -181,7 +144,7 @@
       <h4>This device is <span class="black"><span id="rented"></span></span>rented.</h4>
       <h4>Price: <span class="black"><span id="price"></span> Ether</span></h4>
       <h4><span class="black"><span id="description"></span></span></h4> -->
-      <button id="reclaimObject" onclick="reclaimObject();switchPageView();">Take back Object</button>
+      <button id="reclaimObject" onclick="EntryPoint.reclaimObject();EntryPoint.switchPageView();">Take back Object</button>
     </div>
 
     <!-- Page to show information for the current renter -->
@@ -196,7 +159,7 @@
       <header><h2>Information</h2></header>
 
       <p>By renting this object you agree to the <em>Terms and Conditions</em>.</p>
-      <button id="rentObject" onclick="rentObject();">Rent Object</button>
+      <button id="rentObject" onclick="EntryPoint.rentObject();">Rent Object</button>
     </div>
 
     <!-- Page to register a new object -->
@@ -220,7 +183,7 @@
           <td><input type="number" id="_deposit" placeholder="e.g., 95"></td>
         </tr>
       </table>
-      <button id="register" onclick="registerObject();switchPageView();">Register Object
+      <button id="register" onclick="EntryPoint.registerObject();EntryPoint.switchPageView();">Register Object
       </button>
     </div>
 
@@ -250,17 +213,18 @@
 </section>
 
 <!-- Scripts -->
-<script src="https://webrtc.github.io/adapter/adapter-latest.js"></script>
-<script type="text/javascript" src="./js/qrcode-reader.js"></script>
-<script type="text/javascript" src="./js/qrcode-init.js"></script>
 
-<script src="assets/js/jquery.scrolly.min.js"></script>
-<script src="assets/js/jquery.poptrox.min.js"></script>
-<script src="assets/js/skel.min.js"></script>
-<script src="assets/js/util.js"></script>
+<script type="text/javascript" src="assets/js/jquery.scrolly.min.js"></script>
+<script type="text/javascript" src="assets/js/jquery.poptrox.min.js"></script>
+<script type="text/javascript" src="assets/js/skel.min.js"></script>
+<script type="text/javascript" src="assets/js/util.js"></script>
 <!--[if lte IE 8]>
-<script src="assets/js/ie/respond.min.js"></script><![endif]-->
-<script src="assets/js/main.js"></script>
+<script type="text/javascript" src="assets/js/ie/respond.min.js"></script><![endif]-->
+<script type="text/javascript" src="assets/js/main.js"></script>
+
+<script src="https://webrtc.github.io/adapter/adapter-latest.js"></script>
+<script type="text/javascript" src="./assets/js/qrcode-reader.js"></script>
+<script type="text/javascript" src="./assets/js/qrcode-init.js"></script>
 
 </body>
 </html>

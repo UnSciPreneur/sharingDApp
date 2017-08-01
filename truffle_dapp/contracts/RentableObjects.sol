@@ -39,7 +39,7 @@ contract RentableObjects {
   }
 
   function unregisterObject(uint _objId) returns (bool) {
-    if ( (objects[_objId].exists == true) && (objectIsRented(_objId) == false) ) {
+    if ( objects[_objId].exists && (objectIsRented(_objId) == false) ) {
       delete objects[_objId];
       return true;
     }
@@ -47,20 +47,23 @@ contract RentableObjects {
   }
 
   function rentObject(uint _objId) payable returns (bool) {
-    // ToDo: what happens if the _objId does not exist?
-    assert(objectIsRented(_objId) || msg.value < objects[_objId].deposit);
+    if (!(objects[_objId].exists) || objectIsRented(_objId) || msg.value < objects[_objId].deposit) {
+      revert();
+    }
     // add client to object
     objects[_objId].client = Client({cliAddress: msg.sender, since: now, exists: true});
     // send back any excess ether
-    assert(!objects[_objId].client.cliAddress.send(msg.value - objects[_objId].deposit));
+    if (!objects[_objId].client.cliAddress.send(msg.value - objects[_objId].deposit)) {
+      revert();
+    }
     return true;
   }
 
   function reclaimObject(uint _objId) returns (bool) {
-    assert (!objectIsRented(_objId) || objects[_objId].owner != msg.sender);
-    assert (!objects[_objId].owner.send(objects[_objId].deposit - getReturnDeposit(_objId)));
-    assert (!objects[_objId].client.cliAddress.send(getReturnDeposit(_objId)));
-
+    assert (objects[_objId].exists && objectIsRented(_objId) == true && objects[_objId].owner == msg.sender);
+    
+    objects[_objId].owner.transfer(objects[_objId].deposit - getReturnDeposit(_objId));
+    objects[_objId].client.cliAddress.transfer(getReturnDeposit(_objId));
     objects[_objId].client = Client({cliAddress: 0, since: now, exists: false});
     return true;
   }
@@ -70,12 +73,7 @@ contract RentableObjects {
   }
 
   function objectIsRented(uint _objId) returns (bool) {
-    if ( (objects[_objId].exists == true) && (objects[_objId].client.exists == true) ) {
-      return true;
-    }
-    else {
-      return false;
-    }
+    return objects[_objId].exists && objects[_objId].client.exists;
   }
 
   function getReturnDeposit(uint _objId) returns (uint) {

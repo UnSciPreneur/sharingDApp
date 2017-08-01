@@ -29,18 +29,18 @@ Make sure that the settings in `truffle_dapp/truffle.js` match your choice. Both
 
 ## Compiling, deploying, and running the smart contract / app
 
-Before we can do anything with the smart contract we have to compile it
+Before we can do anything with the smart contract we have to compile the app
 ```
-$ truffle compile
+$ npm run build
 ```
 
 To deploy the smart contract into the ethereum network of your choice, i.e., _testrpc_ or _ropsten/mainnet_ = (global test network/main network) run the following in `truffle_dapp`:
 ```
-$ truffle deploy
+$ npm run migrate
 ```
 Then start the dapp with:
 ```
-$ truffle serve
+$ npm run dev
 ```
 
 ## The Truffle Framework

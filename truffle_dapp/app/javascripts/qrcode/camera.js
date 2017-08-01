@@ -8,14 +8,14 @@
 
 var camera = (function (p_vid_id, p_inter, p_scale) {
 
-  if (p_vid_id == undefined) {
+  if (p_vid_id === undefined) {
     console.log("ERROR: You need to specify the id of the <video> element with the camera data stream.");
     return;
   }
 
   var vid_id = p_vid_id;
-  var interval = p_inter != undefined ? p_inter : 1000;
-  var scale = p_scale != undefined ? p_scale : 0.5;
+  var interval = p_inter !== undefined ? p_inter : 1000;
+  var scale = p_scale !== undefined ? p_scale : 0.5;
 
   var video = document.getElementById(vid_id);
   var int_id = null;
