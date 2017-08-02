@@ -1,5 +1,3 @@
-
-
 /*
  The files in this package are taken from
  https://github.com/asbjornenge/jsqrcode-scanner
@@ -52,10 +50,11 @@ var camera = (function (p_vid_id, p_inter, p_scale) {
           var objId = parseInt(result.substr(cutIdx + 7));
           _objId.value = objId;
           $("#qr-value").text(objId);
+          EntryPoint.setObjectId(objId);
+          EntryPoint.switchPageView();
         } else {
           alert("Invalid URL in QR code!");
         }
-        switchPageView();
 
         //ToDo: make this scroll smoothly
         location.hash = "#contextmenu";
@@ -87,7 +86,6 @@ var camera = (function (p_vid_id, p_inter, p_scale) {
 
 navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia;
 
-var cam_video_id = "camsource";
 var streaming = false;
 var track;
 
@@ -99,7 +97,7 @@ function deactivateCam() {
   cam.stop();
   console.log("Camera deactivated");
 
-  var video = document.getElementById(cam_video_id);
+  var video = document.getElementById("camsource");
   video.removeEventListener("canplay", resizeCamCanvas);
   video.style.display = "none";
 
@@ -118,8 +116,9 @@ function deactivateCam() {
 
 function resizeCamCanvas() {
   console.log("Resizing camera canvas");
-  var video = document.getElementById(cam_video_id);
+  var video = document.getElementById("camsource");
   var canvas = document.getElementById("qr-canvas");
+  var camcontainer = document.getElementById("camcontainer");
 
   var width = camcontainer.clientWidth;
   camcontainer.setAttribute('height', width);
@@ -153,7 +152,7 @@ function activateCam() {
     deactivateCam()
   });
   var camcontainer = document.getElementById("camcontainer");
-  var video = document.getElementById(cam_video_id);
+  var video = document.getElementById("camsource");
   video.style.display = "inline-block";
 
   startRecoding();
@@ -189,7 +188,7 @@ function startRecoding() {
   if (!navigator.getUserMedia) return;
 
   if (typeof cam === 'undefined') {
-    cam = camera(cam_video_id);
+    cam = camera("camsource");
   }
   cam.start();
 }

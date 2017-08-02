@@ -17,6 +17,8 @@ var json = require('../../build/contracts/RentableObjects.json');
 var RentableObjects = contract(json);
 RentableObjects.setProvider(provider);
 
+var qrScanner = require('./qr-scanner.js');
+
 // blockCreator is a function for testRPC to mine an on-demand block every 30 seconds
 var blockCreator = setInterval(function () {
   console.log("Creating Block.");
@@ -32,6 +34,8 @@ var blockCreator = setInterval(function () {
 }, 30000);
 
 var initWindow = function () {
+  qrScanner.init();
+  
   web3.eth.getAccounts(function (err, accs) {
     if (err !== null) {
       alert("There was an error fetching your accounts.");
@@ -96,6 +100,10 @@ function initState() {
     setStatus("Error executing getContractOwnerAddress()");
   });
 }
+
+var setObjectId = function (objId) {
+  objectId = objId;
+};
 
 // this should only (!!) be called if an objectId has been set
 var switchPageView = function() {
@@ -545,6 +553,7 @@ function formatAccountAddress(account) {
 module.exports = {
   initWindow: initWindow,
   toggleAccounts: toggleAccounts,
+  setObjectId: setObjectId,
   switchPageView: switchPageView,
   registerObject: registerObject,
   rentObject: rentObject,

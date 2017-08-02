@@ -34,7 +34,8 @@
     "web3": "^0.18.2",
     "webpack": "^2.2.1",
     "truffle-contract": "latest",
-    "webpack-dev-server": "^2.3.0"
+    "webpack-dev-server": "^2.3.0",
+    "webrtc-adapter": "latest"
   },
   "scripts": {
     "serve": "truffle serve",

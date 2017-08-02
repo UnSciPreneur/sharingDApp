@@ -50,10 +50,11 @@ var camera = (function (p_vid_id, p_inter, p_scale) {
           var objId = parseInt(result.substr(cutIdx + 7));
           _objId.value = objId;
           $("#qr-value").text(objId);
+          EntryPoint.setObjectId(objId);
+          EntryPoint.switchPageView();
         } else {
           alert("Invalid URL in QR code!");
         }
-        switchPageView();
 
         //ToDo: make this scroll smoothly
         location.hash = "#contextmenu";
