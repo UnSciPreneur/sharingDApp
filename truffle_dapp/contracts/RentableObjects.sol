@@ -53,6 +53,7 @@ contract RentableObjects {
     // add client to object
     objects[_objId].client = Client({cliAddress: msg.sender, since: now, exists: true});
     // send back any excess ether
+    // there is an issue with this pattern: https://blog.ethereum.org/2016/06/10/smart-contract-security/
     if (!objects[_objId].client.cliAddress.send(msg.value - objects[_objId].deposit)) {
       revert();
     }
@@ -61,9 +62,13 @@ contract RentableObjects {
 
   function reclaimObject(uint _objId) returns (bool) {
     assert (objects[_objId].exists && objectIsRented(_objId) == true && objects[_objId].owner == msg.sender);
-    
-    objects[_objId].owner.transfer(objects[_objId].deposit - getReturnDeposit(_objId));
-    objects[_objId].client.cliAddress.transfer(getReturnDeposit(_objId));
+
+    if (!objects[_objId].owner.send(objects[_objId].deposit - getReturnDeposit(_objId))) {
+      revert();
+    }
+    if (!objects[_objId].client.cliAddress.transfer(getReturnDeposit(_objId))) {
+      revert();
+    }
     objects[_objId].client = Client({cliAddress: 0, since: now, exists: false});
     return true;
   }
