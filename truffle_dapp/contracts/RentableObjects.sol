@@ -30,7 +30,7 @@ contract RentableObjects {
   }
 
   function registerObject(uint _objId, uint _deposit, uint _pricePerDay, string _descr) returns (bool) {
-    if (objectIsRegistered(_objId) == false) {
+    if ( !(objectIsRegistered(_objId)) ) {
       Client memory nilClient = Client({cliAddress: 0, since: now, exists: false});
       objects[_objId] = Object({objId: _objId, description: _descr, deposit: _deposit, pricePerDay: _pricePerDay, client: nilClient, created: now, owner: msg.sender, exists: true});
       return true;
@@ -39,7 +39,7 @@ contract RentableObjects {
   }
 
   function unregisterObject(uint _objId) returns (bool) {
-    if ( objects[_objId].exists && (objectIsRented(_objId) == false) ) {
+    if ( objectIsRegistered(_objId) && !(objectIsRented(_objId)) ) {
       delete objects[_objId];
       return true;
     }
@@ -47,26 +47,27 @@ contract RentableObjects {
   }
 
   function rentObject(uint _objId) payable returns (bool) {
-    if (!(objects[_objId].exists) || objectIsRented(_objId) || msg.value < objects[_objId].deposit) {
+    if ( !(objectIsRegistered(_objId)) || objectIsRented(_objId) || msg.value < objects[_objId].deposit) {
       revert();
     }
     // add client to object
     objects[_objId].client = Client({cliAddress: msg.sender, since: now, exists: true});
     // send back any excess ether
-    // there is an issue with this pattern: https://blog.ethereum.org/2016/06/10/smart-contract-security/
-    if (!objects[_objId].client.cliAddress.send(msg.value - objects[_objId].deposit)) {
+    // there might be an issue with this pattern: https://blog.ethereum.org/2016/06/10/smart-contract-security/
+    if ( !objects[_objId].client.cliAddress.send(msg.value - objects[_objId].deposit) ) {
       revert();
     }
     return true;
   }
 
   function reclaimObject(uint _objId) returns (bool) {
-    assert (objects[_objId].exists && objectIsRented(_objId) == true && objects[_objId].owner == msg.sender);
+    assert ( objectIsRented(_objId) && objects[_objId].owner == msg.sender );
 
-    if (!objects[_objId].owner.send(objects[_objId].deposit - getReturnDeposit(_objId))) {
+    uint returnDeposit = getReturnDeposit(_objId);
+    if ( !objects[_objId].owner.send(objects[_objId].deposit - returnDeposit) ) {
       revert();
     }
-    if (!objects[_objId].client.cliAddress.transfer(getReturnDeposit(_objId))) {
+    if ( !objects[_objId].client.cliAddress.send(returnDeposit) ) {
       revert();
     }
     objects[_objId].client = Client({cliAddress: 0, since: now, exists: false});
