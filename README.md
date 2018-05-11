@@ -6,7 +6,7 @@ https://github.com/UnSciPreneur/sharingDApp/
 
 For further background see our publication "_A Decentralised Sharing App running a Smart Contract on the Ethereum Blockchain_" published in the *Proceedings of the 6th International Conference on the Internet of Things* (Pages 177-178): http://b0x.it/l/K8f42
 
-You will find more documentation regarding the app in `truffle_dapp/README.md`.
+You wil l find more documentation regarding the app in `truffle_dapp/README.md`.
 
 This project has been implemented with the friendly support of the Bosch IoT Lab (www.iot-lab.ch).
 
@@ -14,7 +14,7 @@ This project has been implemented with the friendly support of the Bosch IoT Lab
 
 Check out the app from git using above URL. Then run (in `sharingDApp/`)
 ```
-$ sudo npm install -g ethereumjs-testrpc
+$ sudo npm install -g ganache-cli truffle
 $ ./rpcnetwork.sh
 ```
 and in a separate shell (also in `sharingDApp/`)
@@ -22,8 +22,11 @@ and in a separate shell (also in `sharingDApp/`)
 $ cd truffle_dapp
 $ npm install
 $ truffle deploy
-$ truffle serve
+$ npm run dev
 ```
+
+(`truffle serve` is broken since truffle 3.x. See https://github.com/trufflesuite/truffle/issues/463)
+
 This will start up a `testrpc` client with the required accounts, deploy the smart contract into this test environment, and start the app. The app is then available at `http://localhost:8080`. 
  
 Of course you can use a full ethereum client instead of `testrpc`. Simply adjust the port settings in `truffle_dapp/truffle.js` and make sure that the accounts you want to use are unlocked.

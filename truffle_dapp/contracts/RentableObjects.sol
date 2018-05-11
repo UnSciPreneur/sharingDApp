@@ -25,11 +25,11 @@ contract RentableObjects {
   address owner;
 
   // Constructor
-  function RentableObjects() {
+  function RentableObjects() public {
     owner = msg.sender;
   }
 
-  function registerObject(uint _objId, uint _deposit, uint _pricePerDay, string _descr) returns (bool) {
+  function registerObject(uint _objId, uint _deposit, uint _pricePerDay, string _descr) public returns (bool) {
     if ( !(objectIsRegistered(_objId)) ) {
       Client memory nilClient = Client({cliAddress: 0, since: now, exists: false});
       objects[_objId] = Object({objId: _objId, description: _descr, deposit: _deposit, pricePerDay: _pricePerDay, client: nilClient, created: now, owner: msg.sender, exists: true});
@@ -38,7 +38,7 @@ contract RentableObjects {
     revert();
   }
 
-  function unregisterObject(uint _objId) returns (bool) {
+  function unregisterObject(uint _objId) public returns (bool) {
     if ( objectIsRegistered(_objId) && !(objectIsRented(_objId)) ) {
       delete objects[_objId];
       return true;
@@ -46,7 +46,7 @@ contract RentableObjects {
     revert();
   }
 
-  function rentObject(uint _objId) payable returns (bool) {
+  function rentObject(uint _objId) public payable returns (bool) {
     if ( !(objectIsRegistered(_objId)) || objectIsRented(_objId) || msg.value < objects[_objId].deposit) {
       revert();
     }
@@ -60,7 +60,7 @@ contract RentableObjects {
     return true;
   }
 
-  function reclaimObject(uint _objId) returns (bool) {
+  function reclaimObject(uint _objId) public returns (bool) {
     assert ( objectIsRented(_objId) && objects[_objId].owner == msg.sender );
 
     uint returnDeposit = getReturnDeposit(_objId);
@@ -74,15 +74,15 @@ contract RentableObjects {
     return true;
   }
 
-  function objectIsRegistered(uint _objId) returns (bool) {
+  function objectIsRegistered(uint _objId) public view returns (bool) {
     return objects[_objId].exists;
   }
 
-  function objectIsRented(uint _objId) returns (bool) {
+  function objectIsRented(uint _objId) public view returns (bool) {
     return objects[_objId].exists && objects[_objId].client.exists;
   }
 
-  function getReturnDeposit(uint _objId) returns (uint) {
+  function getReturnDeposit(uint _objId) public view returns (uint) {
     uint day = 86400;
     uint clientTime = getObjectClientTime(_objId);
     uint daysRented = ( (clientTime - 1) / day ) + 1;
@@ -91,40 +91,40 @@ contract RentableObjects {
     return returnDeposit;
   }
 
-  function getObjectDeposit(uint _objId) returns (uint) {
+  function getObjectDeposit(uint _objId) public view returns (uint) {
     return objects[_objId].deposit;
   }
 
-  function getObjectPricePerDay(uint _objId) returns (uint) {
+  function getObjectPricePerDay(uint _objId) public view returns (uint) {
     return objects[_objId].pricePerDay;
   }
 
-  function getObjectDescription(uint _objId) returns (string) {
+  function getObjectDescription(uint _objId) public view returns (string) {
     return objects[_objId].description;
   }
 
-  function getObjectClientExists(uint _objId) returns (bool) {
+  function getObjectClientExists(uint _objId) public view returns (bool) {
     return objects[_objId].client.exists;
   }
 
-  function getObjectClientTime(uint _objId) returns (uint) {
+  function getObjectClientTime(uint _objId) public view returns (uint) {
     return now - objects[_objId].client.since;
   }
 
-  function getObjectClientAddress(uint _objId) returns (address) {
+  function getObjectClientAddress(uint _objId) public view returns (address) {
     return objects[_objId].client.cliAddress;
   }
 
-  function getObjectOwnerAddress(uint _objId) returns (address) {
+  function getObjectOwnerAddress(uint _objId) public view returns (address) {
     return objects[_objId].owner;
   }
 
-  function getContractOwnerAddress() returns (address) {
+  function getContractOwnerAddress() public view returns (address) {
     return owner;
   }
 
   // Fallback function results in nothing
-  function () {
+  function () public {
     revert();
   }
 
